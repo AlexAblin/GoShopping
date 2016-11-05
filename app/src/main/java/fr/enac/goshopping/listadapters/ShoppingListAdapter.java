@@ -34,7 +34,7 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingListObject> {
         this.list = objects;
     }
 
-    @NonNull
+   // @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
@@ -45,11 +45,11 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingListObject> {
         }
 
         ArrayList<Product> listProduct = new GoShoppingDBHelper(getContext()).getArticles();
-        ProductListAdapter adapter= new ProductListAdapter(getContext(),R.layout.element_list_product_layout,listProduct);
+        ProductListAdapter adapter= new ProductListAdapter(context,R.layout.element_list_product_layout,listProduct);
 
         ShoppingListObject listItem=list.get(position);
-        Spinner p= (Spinner) view.findViewById(R.id.spinner);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Spinner p= (Spinner) view.findViewById(R.id.spinnerList);
+
         p.setPrompt(listItem.getList_name());
         p.setAdapter(adapter);
 

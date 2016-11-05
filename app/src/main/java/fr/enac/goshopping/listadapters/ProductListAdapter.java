@@ -27,9 +27,10 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         this.context = context;
         this.resource = resource;
         this.list = objects;
+        this.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     }
 
-    @NonNull
+   // @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
@@ -47,6 +48,7 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         productName.setText(prod.getName());
         productCategory.setText(prod.getCategory());
         productQuantity.setText(String.valueOf(prod.getQuantity()));
+
 
         return view;
     }
