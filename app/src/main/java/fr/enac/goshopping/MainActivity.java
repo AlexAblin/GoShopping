@@ -23,26 +23,28 @@ import fr.enac.goshopping.objects.ShoppingListObject;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SettingsFragment.OnFragmentInteractionListener,
 CalendarFragment.OnFragmentInteractionListener, ShoppingListFragment.OnFragmentInteractionListener,
-ShopFragment.OnFragmentInteractionListener{
+ShopFragment.OnFragmentInteractionListener, NewShopFragment.OnFragmentInteractionListener{
 
     private GoShoppingDBHelper dbHelper;
+    private FloatingActionButton fab;
+    private int state;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dbHelper = new GoShoppingDBHelper(this);
         dbHelper.onCreate(dbHelper.getWritableDatabase());
-        System.out.println(dbHelper.getShops());
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();*/
+                handleFabButton(view);
             }
         });
 
@@ -98,29 +100,20 @@ ShopFragment.OnFragmentInteractionListener{
         Fragment toCommit = null;
 
         if (id == R.id.nav_go_shopping) {
-            // Handle the camera action
 
         } else if (id == R.id.nav_calendar) {
+            state = id;
             toCommit = new CalendarFragment();
-            /*fragmentManager.beginTransaction()
-                    .replace(R.id.content_main, calendarFragment)
-                    .commit();*/
         } else if (id == R.id.nav_shopping_list) {
+            state = id;
             toCommit = new ShoppingListFragment();
-            /*fragmentManager.beginTransaction()
-                    .replace(R.id.content_main, shoppingListFragment)
-                    .commit();*/
         } else if (id == R.id.nav_shop) {
-            GoShoppingDBHelper dbHelper = new GoShoppingDBHelper(this);
-            dbHelper.addShop(new Shop(null,"UPS'Store", "118 Route de Narbonne", "Toulouse", "31400"));
+            state = id;
+            //dbHelper.addShop(new Shop(null,"UPS'Store", "118 Route de Narbonne", "Toulouse", "31400"));
             toCommit = new ShopFragment();
-            //fragmentManager.beginTransaction()
         } else if (id == R.id.nav_settings) {
+            state = id;
             toCommit = new SettingsFragment();
-
-            /*fragmentManager.beginTransaction()
-                    .replace(R.id.content_main, settingsFragment)
-                    .commit();*/
         }
 
         fragmentManager.beginTransaction()
@@ -130,6 +123,25 @@ ShopFragment.OnFragmentInteractionListener{
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void handleFabButton(View view){
+        switch (state){
+            case R.id.nav_go_shopping:
+                break;
+            case R.id.nav_calendar:
+                break;
+            case R.id.nav_shopping_list:
+                break;
+            case R.id.nav_shop:
+                fab.setVisibility(View.INVISIBLE);
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.content_main,new NewShopFragment())
+                        .commit();
+                break;
+            case R.id.nav_settings:
+                break;
+        }
     }
 
     @Override
