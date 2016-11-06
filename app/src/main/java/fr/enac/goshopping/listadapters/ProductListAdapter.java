@@ -58,6 +58,11 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         productCategory.setText(prod.getCategory());
         productQuantity.setText(String.valueOf(prod.getQuantity()));
         Button b= (Button) view.findViewById(R.id.buttonAdd);
+        if(position==list.size()-1){
+            b.setVisibility(View.VISIBLE);
+        } else {
+            b.setVisibility(View.GONE);
+        }
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
