@@ -1,5 +1,6 @@
 package fr.enac.goshopping;
 
+import android.app.FragmentManager;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,24 +9,25 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-
-import java.util.ArrayList;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import fr.enac.goshopping.database.GoShoppingDBHelper;
-import fr.enac.goshopping.listadapters.ShopListArrayAdapter;
-import fr.enac.goshopping.listadapters.ShoppingListAdapter;
+import fr.enac.goshopping.objects.Product;
+import fr.enac.goshopping.objects.Shop;
+
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ShoppingListFragment.OnFragmentInteractionListener} interface
+ * {@link NewArticleFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link ShoppingListFragment#newInstance} factory method to
+ * Use the {@link NewArticleFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ShoppingListFragment extends Fragment {
+public class NewArticleFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -36,9 +38,13 @@ public class ShoppingListFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private EditText name;
+    private EditText quantity;
+    private Button saveButton;
     private FloatingActionButton fab;
 
-    public ShoppingListFragment() {
+    public NewArticleFragment() {
         // Required empty public constructor
     }
 
@@ -48,11 +54,11 @@ public class ShoppingListFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment ShoppingListFragment.
+     * @return A new instance of fragment NewArticleFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ShoppingListFragment newInstance(String param1, String param2) {
-        ShoppingListFragment fragment = new ShoppingListFragment();
+    public static NewArticleFragment newInstance(String param1, String param2) {
+        NewArticleFragment fragment = new NewArticleFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -67,22 +73,31 @@ public class ShoppingListFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        View v= inflater.inflate(R.layout.fragment_new_article, container, false);
+        name = (EditText) v.findViewById(R.id.manage_article_name);
+        quantity = (EditText) v.findViewById(R.id.manage_article_quantity);
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.GONE);
-        View v= inflater.inflate(R.layout.fragment_shopping_list, container, false);
-        ArrayList list = new GoShoppingDBHelper(getContext()).getShoppingLists();
-        ListView listView = (ListView) v.findViewById(R.id.shopping_list_list);
-        ArrayAdapter adapter = new ShoppingListAdapter(getActivity(), R.layout.element_list_shopping_layout, list);
-        listView.setAdapter(adapter);
+        saveButton= (Button) v.findViewById(R.id.SaveArticle);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Product prod = new Product(null,name.getText().toString(),"test",quantity.getText().toString());
+                new GoShoppingDBHelper(getActivity()).addArticle(prod);
+                FragmentManager fragmentManager = getActivity().getFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.content_main,new ShoppingListFragment())
+                        .commit();
+                fab.setVisibility(View.VISIBLE);
+                Toast.makeText(getContext(), "Article enregistré.", Toast.LENGTH_SHORT).show();
+            }
+        });
         return v;
     }
 

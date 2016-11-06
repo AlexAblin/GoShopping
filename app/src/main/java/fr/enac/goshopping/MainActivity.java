@@ -23,7 +23,7 @@ import fr.enac.goshopping.objects.ShoppingListObject;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SettingsFragment.OnFragmentInteractionListener,
 CalendarFragment.OnFragmentInteractionListener, ShoppingListFragment.OnFragmentInteractionListener,
-ShopFragment.OnFragmentInteractionListener, NewShopFragment.OnFragmentInteractionListener{
+ShopFragment.OnFragmentInteractionListener, NewShopFragment.OnFragmentInteractionListener, NewArticleFragment.OnFragmentInteractionListener{
 
     private GoShoppingDBHelper dbHelper;
     private FloatingActionButton fab;

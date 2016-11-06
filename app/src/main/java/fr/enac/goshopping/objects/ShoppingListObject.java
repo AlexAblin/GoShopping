@@ -8,9 +8,9 @@ public class ShoppingListObject {
 
     private String _ID;
     private String list_name;
-    private String shop;
+   private String shop;
 
-    public ShoppingListObject(String _ID, String list_name, String shop){
+    public ShoppingListObject(String _ID, String list_name,String shop){
         this._ID = _ID;
         this.list_name = list_name;
         this.shop = shop;

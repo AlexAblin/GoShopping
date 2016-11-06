@@ -60,16 +60,24 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
 
         //On crée un rayon
         values = new ContentValues();
-        values.put(GoShoppingDBContract.ShelfTable.COLUMN_NAME_SHELF_NAME,"Vêtement");
+        values.put(GoShoppingDBContract.ShoppingList.COLUMN_NAME_LIST_NAME,"Vêtement");
+        values.put(GoShoppingDBContract.ShoppingList.COLUMN_NAME_LIST_SHOP,"leclerc");
         //On insère le rayon
-        newRowId = sqLiteDatabase.insert(GoShoppingDBContract.ShelfTable.TABLE_NAME,null,values);
+        newRowId = sqLiteDatabase.insert(GoShoppingDBContract.ShoppingList.TABLE_NAME,null,values);
         System.out.println(newRowId);
 
         //On crée un article
         values = new ContentValues();
         values.put(GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_NAME, "Sweat ENAC");
         values.put(GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_SHELF, "" + newRowId);
-        values.put(GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_QTY, "1");
+        //values.put(GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_QTY, "1");
+        newRowId = sqLiteDatabase.insert(GoShoppingDBContract.ArticleTable.TABLE_NAME,null,values);
+        System.out.println(newRowId);
+
+        values = new ContentValues();
+        values.put(GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_NAME, "casquette IHM");
+        values.put(GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_SHELF, "" + newRowId);
+        //values.put(GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_QTY, "1");
         newRowId = sqLiteDatabase.insert(GoShoppingDBContract.ArticleTable.TABLE_NAME,null,values);
         System.out.println(newRowId);
     }
@@ -146,7 +154,7 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
         ShoppingListObject toAdd;
         if(c.moveToFirst()){
             do{
-                toAdd = new ShoppingListObject(c.getString(0),c.getString(1),c.getString(2));
+                toAdd = new ShoppingListObject(c.getString(0),c.getString(1),"magasin");
                 toReturn.add(toAdd);
             }while (c.moveToNext());
         }
@@ -161,7 +169,7 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
 
         //On lie les données du magasin au conteneur
         values.put(GoShoppingDBContract.ShoppingList.COLUMN_NAME_LIST_NAME, list.getList_name());
-        values.put(GoShoppingDBContract.ShoppingList.COLUMN_NAME_LIST_SHOP, list.getShop());
+       values.put(GoShoppingDBContract.ShoppingList.COLUMN_NAME_LIST_SHOP, list.getShop());
         //values.put(GoShoppingDBContract.ShoppingList.COLUMN_NAME_SHOP_CITY, shop.getCity());
 
         //On insère le tuple
@@ -175,11 +183,11 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
                 GoShoppingDBContract.ArticleTable._ID,
                 GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_NAME,
                 GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_SHELF,
-                GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_QTY
+               // GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_QTY
         };
         String sortOrder = GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_NAME + " ASC";
         Cursor c = db.query(
-                GoShoppingDBContract.ShoppingList.TABLE_NAME,// The table to query
+                GoShoppingDBContract.ArticleTable.TABLE_NAME,// The table to query
                 projection,                               // The columns to return
                 null,                                     // The columns for the WHERE clause
                 null,                                     // The values for the WHERE clause
@@ -190,7 +198,7 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
         Product toAdd;
         if(c.moveToFirst()){
             do{
-                toAdd = new Product(c.getString(0),c.getString(1),c.getInt(2));
+                toAdd = new Product(null,c.getString(0),c.getString(1),"1");
                 toReturn.add(toAdd);
             }while (c.moveToNext());
         }
@@ -206,7 +214,7 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
         //On lie les données du magasin au conteneur
         values.put(GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_NAME, prod.getName());
         values.put(GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_SHELF, prod.getCategory());
-        values.put(GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_QTY, prod.getQuantity());
+        //values.put(GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_QTY, prod.getQuantity());
 
         //On insère le tuple
         sqLiteDatabase.insert(GoShoppingDBContract.ArticleTable.TABLE_NAME,null,values);

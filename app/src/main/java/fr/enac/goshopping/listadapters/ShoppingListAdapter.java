@@ -1,13 +1,11 @@
 package fr.enac.goshopping.listadapters;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -43,19 +41,14 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingListObject> {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE); view = inflater.inflate(resource, parent, false);
         }
-
-        ArrayList<Product> listProduct = new GoShoppingDBHelper(getContext()).getArticles();
-        ProductListAdapter adapter= new ProductListAdapter(context,R.layout.element_list_product_layout,listProduct);
-
+        ArrayList<Product> listProduct = new GoShoppingDBHelper(context).getArticles();
+        ArrayAdapter adapter= new ProductListAdapter(context,R.layout.element_list_product_layout,listProduct);
         ShoppingListObject listItem=list.get(position);
         Spinner p= (Spinner) view.findViewById(R.id.spinnerList);
-
-        p.setPrompt(listItem.getList_name());
         p.setAdapter(adapter);
 
-        TextView t= (TextView) view.findViewById(R.id.textViewTest);
+        TextView t= (TextView)view.findViewById(R.id.NomListe);
         t.setText(listItem.getList_name());
-
         return view;
     }
 }

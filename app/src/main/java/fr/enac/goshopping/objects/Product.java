@@ -5,12 +5,13 @@ package fr.enac.goshopping.objects;
  */
 
 public class Product {
-
+    private String _id;
     private String name;
     private String category;
-    private int quantity;
+    private String quantity;
 
-    public Product(String name,String category,int quantity){
+    public Product(String _id,String name,String category,String quantity){
+        this._id = _id;
         this.name=name;
         this.category=category;
         this.quantity=quantity;
@@ -28,7 +29,7 @@ public class Product {
         return category;
     }
 
-    public int getQuantity() { return quantity; }
+    public String getQuantity() { return quantity; }
 
     public void setCategory(String category) {
         this.category = category;
