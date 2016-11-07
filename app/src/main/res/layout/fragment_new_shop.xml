@@ -58,11 +58,6 @@
                 android:hint="Ville" />
         </LinearLayout>
 
-        <Button
-            android:text="Enregistrer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/manage_shop_save" />
     </LinearLayout>
 
 </FrameLayout>

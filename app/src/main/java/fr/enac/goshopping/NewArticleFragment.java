@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,19 +84,22 @@ public class NewArticleFragment extends Fragment {
         name = (EditText) v.findViewById(R.id.manage_article_name);
         quantity = (EditText) v.findViewById(R.id.manage_article_quantity);
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.setVisibility(View.GONE);
-        saveButton= (Button) v.findViewById(R.id.SaveArticle);
-        saveButton.setOnClickListener(new View.OnClickListener() {
+        //fab.setVisibility(View.GONE);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Product prod = new Product(null,name.getText().toString(),"test",quantity.getText().toString());
-                new GoShoppingDBHelper(getActivity()).addArticle(prod);
-                FragmentManager fragmentManager = getActivity().getFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.content_main,new ShoppingListFragment())
-                        .commit();
-                fab.setVisibility(View.VISIBLE);
-                Toast.makeText(getContext(), "Article enregistré.", Toast.LENGTH_SHORT).show();
+                if(!name.getText().toString().equals("")) {
+                    Product prod = new Product(null, name.getText().toString(), "test", quantity.getText().toString());
+                    new GoShoppingDBHelper(getActivity()).addArticle(prod);
+                    FragmentManager fragmentManager = getActivity().getFragmentManager();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.content_main, new ShoppingListFragment())
+                            .commit();
+                    Toast.makeText(getContext(), "Article enregistré.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Snackbar.make(view, "Nom d'article incorrect", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
             }
         });
         return v;

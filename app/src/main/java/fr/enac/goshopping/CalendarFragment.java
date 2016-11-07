@@ -1,5 +1,7 @@
 package fr.enac.goshopping;
 
+import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,6 +9,15 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import java.util.ArrayList;
+
+import fr.enac.goshopping.database.GoShoppingDBHelper;
+import fr.enac.goshopping.listadapters.ShopListArrayAdapter;
+import fr.enac.goshopping.objects.ShoppingListObject;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -63,7 +74,27 @@ public class CalendarFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_calendar, container, false);
+        View v= inflater.inflate(R.layout.fragment_calendar, container, false);
+        ListView calendar_list= (ListView)v.findViewById(R.id.calendar_list);
+        ArrayList<ShoppingListObject> list = new GoShoppingDBHelper(getContext()).getShoppingLists();
+        ArrayList<String>listName= new ArrayList<>();
+        for(ShoppingListObject s:list){
+            listName.add(s.getList_name());
+        }
+        ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, listName);
+        calendar_list.setAdapter(adapter);
+        calendar_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                FragmentManager fm = getActivity().getFragmentManager();
+                fm.beginTransaction()
+                        .replace(R.id.content_main,new RappelsFragment())
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

@@ -26,12 +26,6 @@
             android:id="@+id/manage_list_name"
             android:hint="nom de la liste" />
 
-        <Button
-            android:text="Creer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/saveList" />
-
     </LinearLayout>
 
 </FrameLayout>

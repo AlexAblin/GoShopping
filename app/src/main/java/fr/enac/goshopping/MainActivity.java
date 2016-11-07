@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SettingsFragment.OnFragmentInteractionListener,
 CalendarFragment.OnFragmentInteractionListener, ShoppingListFragment.OnFragmentInteractionListener,
 ShopFragment.OnFragmentInteractionListener, NewShopFragment.OnFragmentInteractionListener,
-        NewArticleFragment.OnFragmentInteractionListener, NewListFragment.OnFragmentInteractionListener{
+        NewArticleFragment.OnFragmentInteractionListener, NewListFragment.OnFragmentInteractionListener, RappelsFragment.OnFragmentInteractionListener{
 
     private GoShoppingDBHelper dbHelper;
     private FloatingActionButton fab;
@@ -133,14 +133,12 @@ ShopFragment.OnFragmentInteractionListener, NewShopFragment.OnFragmentInteractio
             case R.id.nav_calendar:
                 break;
             case R.id.nav_shopping_list:
-                fab.setVisibility(View.INVISIBLE);
                 getFragmentManager().beginTransaction()
                         .replace(R.id.content_main,new NewListFragment())
                         .commit();
                 break;
             case R.id.nav_shop:
-                fab.setVisibility(View.INVISIBLE);
-                getFragmentManager().beginTransaction()
+               getFragmentManager().beginTransaction()
                         .replace(R.id.content_main,new NewShopFragment())
                         .commit();
                 break;
