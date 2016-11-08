@@ -4,34 +4,35 @@
     android:layout_height="match_parent"
     android:weightSum="1">
 
-    <TextView
-        android:text="TextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/NomListe"
-        android:textAppearance="@android:style/TextAppearance.Material.Title" />
-
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="121dp">
+        android:layout_height="wrap_content">
 
         <CheckBox
             android:layout_width="68dp"
-            android:layout_height="99dp"
+            android:layout_height="wrap_content"
             android:id="@+id/checkBoxList" />
 
-        <Spinner
+        <TextView
+            android:text="TextView"
             android:layout_width="match_parent"
-            android:layout_height="97dp"
-            android:id="@+id/spinnerList" />
+            android:layout_height="wrap_content"
+            android:id="@+id/NomListe"
+            android:textAppearance="@android:style/TextAppearance.Material.Title"
+            android:layout_weight="1" />
 
     </LinearLayout>
 
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinnerList" />
+
     <Button
         android:text="Ajouter un article"
-        android:layout_width="match_parent"
-        android:layout_height="84dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/buttonAdd" />
 
 </LinearLayout>

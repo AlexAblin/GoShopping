@@ -1,4 +1,4 @@
-package fr.enac.goshopping;
+package fr.enac.goshopping.fragment;
 
 import android.app.FragmentManager;
 import android.content.Context;
@@ -12,12 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import fr.enac.goshopping.R;
 import fr.enac.goshopping.database.GoShoppingDBHelper;
 import fr.enac.goshopping.objects.Product;
-import fr.enac.goshopping.objects.Shop;
 
 
 /**

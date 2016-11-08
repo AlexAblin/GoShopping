@@ -1,27 +1,16 @@
 package fr.enac.goshopping.listadapters;
 
-import android.app.Activity;
-import android.app.FragmentManager;
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
-import fr.enac.goshopping.NewArticleFragment;
-import fr.enac.goshopping.NewShopFragment;
 import fr.enac.goshopping.R;
-import fr.enac.goshopping.ShoppingListFragment;
-import fr.enac.goshopping.database.GoShoppingDBHelper;
 import fr.enac.goshopping.objects.Product;
-
-import static fr.enac.goshopping.R.id.fab;
 
 /**
  * Created by alexandre on 05/11/2016.

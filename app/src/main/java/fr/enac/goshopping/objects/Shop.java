@@ -11,6 +11,8 @@ public class Shop {
     private String adress;
     private String city;
     private String postcode;
+    private double latitude;
+    private double longitude;
 
     public Shop(String _id, String name, String adress, String city, String postcode){
         this._id = _id;
@@ -18,6 +20,12 @@ public class Shop {
         this.adress = adress;
         this.city = city;
         this.postcode = postcode;
+    }
+
+    public Shop(String _id, String name, String adress, String city, String postcode, double latitude, double longitude){
+        this(_id,name,adress,city,postcode);
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public String getName() {
@@ -50,6 +58,22 @@ public class Shop {
 
     public void setPostcode(String postcode) {
         this.postcode = postcode;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public String toString(){

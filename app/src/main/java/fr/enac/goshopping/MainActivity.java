@@ -11,7 +11,6 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -22,21 +21,31 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import fr.enac.goshopping.database.GoShoppingDBHelper;
+import fr.enac.goshopping.fragment.CalendarFragment;
+import fr.enac.goshopping.fragment.NewArticleFragment;
+import fr.enac.goshopping.fragment.NewListFragment;
+import fr.enac.goshopping.fragment.NewShopFragment;
+import fr.enac.goshopping.fragment.RappelsFragment;
+import fr.enac.goshopping.fragment.SettingsFragment;
+import fr.enac.goshopping.fragment.ShopFragment;
+import fr.enac.goshopping.fragment.ShoppingListFragment;
 import fr.enac.goshopping.notification.LocationNotificationActivity;
-import fr.enac.goshopping.objects.Shop;
-import fr.enac.goshopping.objects.ShoppingListObject;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SettingsFragment.OnFragmentInteractionListener,
         CalendarFragment.OnFragmentInteractionListener, ShoppingListFragment.OnFragmentInteractionListener,
         ShopFragment.OnFragmentInteractionListener, NewShopFragment.OnFragmentInteractionListener,
-        NewArticleFragment.OnFragmentInteractionListener, NewListFragment.OnFragmentInteractionListener {
+        NewArticleFragment.OnFragmentInteractionListener, NewListFragment.OnFragmentInteractionListener,
+        RappelsFragment.OnFragmentInteractionListener{
 
+    private int MY_PERMISSIONS_REQUEST_FINE_LOCATION;
     private GoShoppingDBHelper dbHelper;
     private FloatingActionButton fab;
     private int state;
+    private int MY_PERMISSIONS_REQUEST_COARSE_LOCATION;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +74,7 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        testLocation();
+        //testLocation();
     }
 
     @Override
@@ -75,6 +84,7 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+
         }
     }
 
@@ -119,7 +129,6 @@ public class MainActivity extends AppCompatActivity
             toCommit = new ShoppingListFragment();
         } else if (id == R.id.nav_shop) {
             state = id;
-            //dbHelper.addShop(new Shop(null,"UPS'Store", "118 Route de Narbonne", "Toulouse", "31400"));
             toCommit = new ShopFragment();
         } else if (id == R.id.nav_settings) {
             state = id;
@@ -128,6 +137,7 @@ public class MainActivity extends AppCompatActivity
 
         fragmentManager.beginTransaction()
                 .replace(R.id.content_main, toCommit)
+                .addToBackStack(null)
                 .commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -142,7 +152,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_calendar:
                 break;
             case R.id.nav_shopping_list:
-                fab.setVisibility(View.INVISIBLE);
+                //fab.setVisibility(View.INVISIBLE);
                 getFragmentManager().beginTransaction()
                         .replace(R.id.content_main,new NewListFragment())
                         .commit();
@@ -150,6 +160,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_shop:
                 fab.setVisibility(View.INVISIBLE);
                 getFragmentManager().beginTransaction()
+                        .addToBackStack(null)
                         .replace(R.id.content_main, new NewShopFragment())
                         .commit();
                 break;
@@ -164,6 +175,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void testLocation() {
+        System.out.println("Début du test location");
         LocationManager locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
         Intent resultIntent = new Intent(this, LocationNotificationActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(
@@ -172,7 +184,14 @@ public class MainActivity extends AppCompatActivity
                 resultIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT
         );
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                MY_PERMISSIONS_REQUEST_FINE_LOCATION);
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                MY_PERMISSIONS_REQUEST_COARSE_LOCATION);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -180,8 +199,10 @@ public class MainActivity extends AppCompatActivity
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-            return;
+            //return;
         }
+        Toast.makeText(this, "Demande de géolocalisation enregistré", Toast.LENGTH_LONG).show();
         locationManager.addProximityAlert(43.6043657, 1.4411526, 250, -1, pendingIntent);
+        System.out.println("Fin du test location");
     }
 }

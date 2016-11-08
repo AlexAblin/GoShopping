@@ -13,29 +13,42 @@ public class GoShoppingDBContract {
     private static final String TEXT_TYPE = " TEXT";
     private static final String COMMA_SEP = ",";
 
-    public static final String TABLE_SHELF = "CREATE TABLE " + ShelfTable.TABLE_NAME
+    public static final String TABLE_SHELF = "CREATE TABLE IF NOT EXISTS " + ShelfTable.TABLE_NAME
             + "(" + ShelfTable._ID + TEXT_TYPE + " PRIMARY KEY" + COMMA_SEP + ShelfTable.COLUMN_NAME_SHELF_NAME + TEXT_TYPE + ")";
 
-    public static final String TABLE_SHOP = "CREATE TABLE " + ShopTable.TABLE_NAME + "(" + ShopTable._ID + TEXT_TYPE + " PRIMARY KEY" +
+    public static final String TABLE_SHOP = "CREATE TABLE IF NOT EXISTS " + ShopTable.TABLE_NAME + "(" + ShopTable._ID + TEXT_TYPE + " PRIMARY KEY" +
             COMMA_SEP + ShopTable.COLUMN_NAME_SHOP_NAME + TEXT_TYPE + COMMA_SEP + ShopTable.COLUMN_NAME_SHOP_ADRESS +
             COMMA_SEP + ShopTable.COLUMN_NAME_SHOP_CITY + TEXT_TYPE + COMMA_SEP +
-            ShopTable.COLUMN_NAME_SHOP_POST_CODE + TEXT_TYPE +")";
+            ShopTable.COLUMN_NAME_SHOP_POST_CODE + TEXT_TYPE + COMMA_SEP + ShopTable.COLUMN_NAME_SHOP_LAT + TEXT_TYPE + COMMA_SEP +
+            ShopTable.COLUMN_NAME_SHOP_LONG + TEXT_TYPE + ")";
 
-    public static final String TABLE_SHOPPING_LIST = "CREATE TABLE " + ShoppingList.TABLE_NAME + "(" + ShoppingList._ID + TEXT_TYPE + " PRIMARY KEY" +
+    public static final String TABLE_SHOPPING_LIST = "CREATE TABLE IF NOT EXISTS " + ShoppingList.TABLE_NAME + "(" + ShoppingList._ID + TEXT_TYPE + " PRIMARY KEY" +
             COMMA_SEP + ShoppingList.COLUMN_NAME_LIST_NAME + TEXT_TYPE + COMMA_SEP + ShoppingList.COLUMN_NAME_LIST_SHOP + TEXT_TYPE + COMMA_SEP +
             "constraint fk_list_shop FOREIGN KEY (" + ShoppingList.COLUMN_NAME_LIST_SHOP + ") REFERENCES " + ShopTable.TABLE_NAME + "(" + ShopTable._ID + "))";
 
-    public static final String TABLE_ARTICLE_LIST = "CREATE TABLE " + ArticleTable.TABLE_NAME + "(" + ArticleTable._ID + TEXT_TYPE + " PRIMARY KEY" +
+    public static final String TABLE_ARTICLE_LIST = "CREATE TABLE IF NOT EXISTS " + ArticleTable.TABLE_NAME + "(" + ArticleTable._ID + TEXT_TYPE + " PRIMARY KEY" +
             COMMA_SEP + ArticleTable.COLUMN_NAME_ARTICLE_NAME + TEXT_TYPE + COMMA_SEP + ArticleTable.COLUMN_NAME_ARTICLE_SHELF + TEXT_TYPE + COMMA_SEP +
             "constraint fk_article_shelf FOREIGN KEY (" + ArticleTable.COLUMN_NAME_ARTICLE_SHELF +  ") REFERENCES " + ShelfTable.TABLE_NAME + "(" + ShelfTable._ID + "))";
 
-    //private static final String TABLE_ARTICLE;
+    public static final String TABLE_SHOPPING_LIST_CONTENT = "CREATE TABLE IF NOT EXISTS " + ShoppingListContent.TABLE_NAME +"(" + ShoppingListContent.COLUMN_NAME_LIST_ID + TEXT_TYPE + COMMA_SEP +
+            ShoppingListContent.COLUMN_NAME_PRODUCT_ID + TEXT_TYPE + COMMA_SEP + ShoppingListContent.COLUMN_NAME_QUANTITY + " INTEGER NOT NULL DEFAULT 1 " + COMMA_SEP +
+            "CONSTRAINT fk_list FOREIGN KEY (" + ShoppingListContent.COLUMN_NAME_LIST_ID + ") REFERENCES " + ShoppingList.TABLE_NAME + "(" + ShoppingList._ID + ")" + COMMA_SEP +
+            "CONSTRAINT fk_article FOREIGN KEY (" + ShoppingListContent.COLUMN_NAME_PRODUCT_ID + ") REFERENCES " + ArticleTable.TABLE_NAME + "(" + ArticleTable._ID + "))";
+
+    public static final String TABLE_REMINDER = "CREATE TABLE IF NOT EXISTS " + ReminderTable.TABLE_NAME + "(" + ReminderTable.COLUMN_NAME_REMINDER_LIST + TEXT_TYPE + COMMA_SEP +
+            ReminderTable.COLUMN_NAME_REMINDER_DATE + " DATETIME" + COMMA_SEP + "CONSTRAINT fk_list_reminder FOREIGN KEY (" + ReminderTable.COLUMN_NAME_REMINDER_LIST + ")" +
+            " REFERENCES " + ShoppingList.TABLE_NAME + "(" + ShoppingList._ID + "))";
+
+    public static class AppSettings{
+        public static final String TABLE_NAME = "Settings";
+        public static final String COLUMN_NAME_SETTING = "Setting";
+        public static final String COLUMN_NAME_VALUE = "Value";
+    }
 
     public static class ArticleTable implements BaseColumns{
         public static final String TABLE_NAME = "Articles";
         public static final String COLUMN_NAME_ARTICLE_NAME = "Article";
         public static final String COLUMN_NAME_ARTICLE_SHELF = "Shelf";
-        public static final String COLUMN_NAME_ARTICLE_QTY = "Quantification";
     }
 
     public static class ShopTable implements BaseColumns{
@@ -44,6 +57,8 @@ public class GoShoppingDBContract {
         public static final String COLUMN_NAME_SHOP_ADRESS = "Shop_Adress";
         public static final String COLUMN_NAME_SHOP_CITY = "Shop_City";
         public static final String COLUMN_NAME_SHOP_POST_CODE = "Shop_Post_Code";
+        public static final String COLUMN_NAME_SHOP_LAT = "Shop_Lat";
+        public static final String COLUMN_NAME_SHOP_LONG = "Shop_Long";
     }
 
     public static class ShelfTable implements BaseColumns{
@@ -59,11 +74,16 @@ public class GoShoppingDBContract {
         //A completer
     }
 
-    public static class Reminders implements BaseColumns{
-        public static final String TABLE_NAME = "";
-        public static final String COLUMN_NAME_REMINDER_NAME = "";
-        public static final String COLUMN_NAME_REMINDER_TYPE = "";
-        public static final String COLUMN_NAME_REMINDER_LOCATION = "";
-        public static final String COLUMN_NAME_REMINDER_DATE = "";
+    public static class ShoppingListContent implements BaseColumns{
+        public static final String TABLE_NAME = "ShoppingListContent";
+        public static final String COLUMN_NAME_LIST_ID = "List_ID";
+        public static final String COLUMN_NAME_PRODUCT_ID = "Product_ID";
+        public static final String COLUMN_NAME_QUANTITY = "Quantity";
+    }
+
+    public static class ReminderTable implements BaseColumns{
+        public static final String TABLE_NAME = "Reminders";
+        public static final String COLUMN_NAME_REMINDER_LIST = "ListReminder";
+        public static final String COLUMN_NAME_REMINDER_DATE = "DateReminder";
     }
 }

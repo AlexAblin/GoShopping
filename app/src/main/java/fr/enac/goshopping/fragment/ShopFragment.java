@@ -1,7 +1,5 @@
-package fr.enac.goshopping;
+package fr.enac.goshopping.fragment;
 
-import android.app.Activity;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,25 +7,25 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import fr.enac.goshopping.R;
 import fr.enac.goshopping.database.GoShoppingDBHelper;
 import fr.enac.goshopping.listadapters.ShopListArrayAdapter;
-import fr.enac.goshopping.objects.ShoppingListObject;
+
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link CalendarFragment.OnFragmentInteractionListener} interface
+ * {@link ShopFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link CalendarFragment#newInstance} factory method to
+ * Use the {@link ShopFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CalendarFragment extends Fragment {
+public class ShopFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -39,7 +37,7 @@ public class CalendarFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public CalendarFragment() {
+    public ShopFragment() {
         // Required empty public constructor
     }
 
@@ -49,11 +47,11 @@ public class CalendarFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment CalendarFragment.
+     * @return A new instance of fragment ShopFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static CalendarFragment newInstance(String param1, String param2) {
-        CalendarFragment fragment = new CalendarFragment();
+    public static ShopFragment newInstance(String param1, String param2) {
+        ShopFragment fragment = new ShopFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -73,27 +71,11 @@ public class CalendarFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View v= inflater.inflate(R.layout.fragment_calendar, container, false);
-        ListView calendar_list= (ListView)v.findViewById(R.id.calendar_list);
-        ArrayList<ShoppingListObject> list = new GoShoppingDBHelper(getContext()).getShoppingLists();
-        ArrayList<String>listName= new ArrayList<>();
-        for(ShoppingListObject s:list){
-            listName.add(s.getList_name());
-        }
-        ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, listName);
-        calendar_list.setAdapter(adapter);
-        calendar_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                FragmentManager fm = getActivity().getFragmentManager();
-                fm.beginTransaction()
-                        .replace(R.id.content_main,new RappelsFragment())
-                        .addToBackStack(null)
-                        .commit();
-            }
-        });
-
+        View v = inflater.inflate(R.layout.fragment_shop, container, false);
+        ArrayList list = new GoShoppingDBHelper(getContext()).getShops();
+        ListView listView = (ListView) v.findViewById(R.id.shopList);
+        ArrayAdapter adapter = new ShopListArrayAdapter(getActivity(), R.layout.element_list_shop_layout, list);
+        listView.setAdapter(adapter);
         return v;
     }
 

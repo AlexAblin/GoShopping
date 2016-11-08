@@ -33,53 +33,56 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         //On supprime toute les tables (pour essai et modification pendant dévellopement)
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + GoShoppingDBContract.ShopTable.TABLE_NAME);
+        /*sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + GoShoppingDBContract.ShopTable.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + GoShoppingDBContract.ShelfTable.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + GoShoppingDBContract.ShoppingList.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + GoShoppingDBContract.ArticleTable.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + GoShoppingDBContract.ShoppingListContent.TABLE_NAME);*/
 
         //On crée les tables
         sqLiteDatabase.execSQL(GoShoppingDBContract.TABLE_SHOP);
         sqLiteDatabase.execSQL(GoShoppingDBContract.TABLE_SHELF);
         sqLiteDatabase.execSQL(GoShoppingDBContract.TABLE_SHOPPING_LIST);
         sqLiteDatabase.execSQL(GoShoppingDBContract.TABLE_ARTICLE_LIST);
+        sqLiteDatabase.execSQL(GoShoppingDBContract.TABLE_SHOPPING_LIST_CONTENT);
+        sqLiteDatabase.execSQL(GoShoppingDBContract.TABLE_REMINDER);
 
         //Conteneur d'un tuple à insérer
-        ContentValues values = new ContentValues();
+        //ContentValues values = new ContentValues();
 
         //On crée un magasin
-        values.put(GoShoppingDBContract.ShopTable.COLUMN_NAME_SHOP_NAME, "ENAC'Shop");
+        /*values.put(GoShoppingDBContract.ShopTable.COLUMN_NAME_SHOP_NAME, "ENAC'Shop");
         values.put(GoShoppingDBContract.ShopTable.COLUMN_NAME_SHOP_ADRESS, "Avenue Edouard Belin");
         values.put(GoShoppingDBContract.ShopTable.COLUMN_NAME_SHOP_CITY, "Toulouse");
-        values.put(GoShoppingDBContract.ShopTable.COLUMN_NAME_SHOP_POST_CODE, "31400");
+        values.put(GoShoppingDBContract.ShopTable.COLUMN_NAME_SHOP_POST_CODE, "31400");*/
 
         //On insère les données du contneur et on récupére l'identifiant généré, qu'on affiche
-        long newRowId = sqLiteDatabase.insert(GoShoppingDBContract.ShopTable.TABLE_NAME,null,values);
-        System.out.println("Ceci est un test : "+newRowId);
+        /*long newRowId = sqLiteDatabase.insert(GoShoppingDBContract.ShopTable.TABLE_NAME,null,values);
+        System.out.println("Ceci est un test : "+newRowId);*/
 
 
         //On crée un rayon
-        values = new ContentValues();
+        /*values = new ContentValues();
         values.put(GoShoppingDBContract.ShoppingList.COLUMN_NAME_LIST_NAME,"Vêtement");
-        values.put(GoShoppingDBContract.ShoppingList.COLUMN_NAME_LIST_SHOP,"leclerc");
+        values.put(GoShoppingDBContract.ShoppingList.COLUMN_NAME_LIST_SHOP,"Leclerc");*/
         //On insère le rayon
-        newRowId = sqLiteDatabase.insert(GoShoppingDBContract.ShoppingList.TABLE_NAME,null,values);
-        System.out.println(newRowId);
+        /*newRowId = sqLiteDatabase.insert(GoShoppingDBContract.ShoppingList.TABLE_NAME,null,values);
+        System.out.println(newRowId);*/
 
         //On crée un article
-        values = new ContentValues();
+        /*values = new ContentValues();
         values.put(GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_NAME, "Sweat ENAC");
         values.put(GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_SHELF, "" + newRowId);
-        //values.put(GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_QTY, "1");
-        newRowId = sqLiteDatabase.insert(GoShoppingDBContract.ArticleTable.TABLE_NAME,null,values);
-        System.out.println(newRowId);
+        //values.put(GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_QTY, "1");*/
+        /*newRowId = sqLiteDatabase.insert(GoShoppingDBContract.ArticleTable.TABLE_NAME,null,values);
+        System.out.println(newRowId);*/
 
-        values = new ContentValues();
-        values.put(GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_NAME, "casquette IHM");
-        values.put(GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_SHELF, "" + newRowId);
+        /*values = new ContentValues();
+        values.put(GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_NAME, "Casquette IHM");
+        values.put(GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_SHELF, "" + newRowId);*/
         //values.put(GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_QTY, "1");
-        newRowId = sqLiteDatabase.insert(GoShoppingDBContract.ArticleTable.TABLE_NAME,null,values);
-        System.out.println(newRowId);
+        /*newRowId = sqLiteDatabase.insert(GoShoppingDBContract.ArticleTable.TABLE_NAME,null,values);
+        System.out.println(newRowId);*/
     }
 
     @Override
@@ -95,7 +98,9 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
                 GoShoppingDBContract.ShopTable.COLUMN_NAME_SHOP_NAME,
                 GoShoppingDBContract.ShopTable.COLUMN_NAME_SHOP_ADRESS,
                 GoShoppingDBContract.ShopTable.COLUMN_NAME_SHOP_CITY,
-                GoShoppingDBContract.ShopTable.COLUMN_NAME_SHOP_POST_CODE
+                GoShoppingDBContract.ShopTable.COLUMN_NAME_SHOP_POST_CODE,
+                GoShoppingDBContract.ShopTable.COLUMN_NAME_SHOP_LAT,
+                GoShoppingDBContract.ShopTable.COLUMN_NAME_SHOP_LONG
         };
         String sortOrder = GoShoppingDBContract.ShopTable.COLUMN_NAME_SHOP_NAME + " ASC";
         Cursor c = db.query(
@@ -128,6 +133,8 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
         values.put(GoShoppingDBContract.ShopTable.COLUMN_NAME_SHOP_ADRESS, shop.getAdress());
         values.put(GoShoppingDBContract.ShopTable.COLUMN_NAME_SHOP_CITY, shop.getCity());
         values.put(GoShoppingDBContract.ShopTable.COLUMN_NAME_SHOP_POST_CODE, shop.getPostcode());
+        values.put(GoShoppingDBContract.ShopTable.COLUMN_NAME_SHOP_LAT, shop.getLatitude());
+        values.put(GoShoppingDBContract.ShopTable.COLUMN_NAME_SHOP_LONG, shop.getLongitude());
 
         //On insère le tuple
         sqLiteDatabase.insert(GoShoppingDBContract.ShopTable.TABLE_NAME,null,values);

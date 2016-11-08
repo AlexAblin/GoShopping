@@ -1,4 +1,4 @@
-package fr.enac.goshopping;
+package fr.enac.goshopping.fragment;
 
 import android.content.Context;
 import android.net.Uri;
@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+
+import fr.enac.goshopping.R;
 
 
 /**

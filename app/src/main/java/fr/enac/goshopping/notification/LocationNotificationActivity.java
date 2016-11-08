@@ -19,6 +19,7 @@ public class LocationNotificationActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //createNotification();
         setContentView(R.layout.activity_main);
     }
 

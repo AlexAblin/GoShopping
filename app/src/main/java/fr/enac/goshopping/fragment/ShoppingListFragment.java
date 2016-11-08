@@ -1,9 +1,10 @@
-package fr.enac.goshopping;
+package fr.enac.goshopping.fragment;
 
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,19 +13,19 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import fr.enac.goshopping.R;
 import fr.enac.goshopping.database.GoShoppingDBHelper;
-import fr.enac.goshopping.listadapters.ShopListArrayAdapter;
-
+import fr.enac.goshopping.listadapters.ShoppingListAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ShopFragment.OnFragmentInteractionListener} interface
+ * {@link ShoppingListFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link ShopFragment#newInstance} factory method to
+ * Use the {@link ShoppingListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ShopFragment extends Fragment {
+public class ShoppingListFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -35,8 +36,9 @@ public class ShopFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private FloatingActionButton fab;
 
-    public ShopFragment() {
+    public ShoppingListFragment() {
         // Required empty public constructor
     }
 
@@ -46,11 +48,11 @@ public class ShopFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment ShopFragment.
+     * @return A new instance of fragment ShoppingListFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ShopFragment newInstance(String param1, String param2) {
-        ShopFragment fragment = new ShopFragment();
+    public static ShoppingListFragment newInstance(String param1, String param2) {
+        ShoppingListFragment fragment = new ShoppingListFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -65,16 +67,23 @@ public class ShopFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_shop, container, false);
-        ArrayList list = new GoShoppingDBHelper(getContext()).getShops();
-        ListView listView = (ListView) v.findViewById(R.id.shopList);
-        ArrayAdapter adapter = new ShopListArrayAdapter(getActivity(), R.layout.element_list_shop_layout, list);
+        // Inflate the layout for this fragment
+        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        View v= inflater.inflate(R.layout.fragment_shopping_list, container, false);
+        ArrayList list = new GoShoppingDBHelper(getContext()).getShoppingLists();
+        ListView listView = (ListView) v.findViewById(R.id.shopping_list_list);
+        ArrayAdapter adapter = new ShoppingListAdapter(getActivity(), R.layout.element_list_shopping_layout, list);
         listView.setAdapter(adapter);
+        fab.setVisibility(View.VISIBLE);
+
         return v;
     }
 
