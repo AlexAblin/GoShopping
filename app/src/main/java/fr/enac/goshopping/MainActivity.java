@@ -1,11 +1,18 @@
 package fr.enac.goshopping;
 
+import android.Manifest;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,14 +24,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import fr.enac.goshopping.database.GoShoppingDBHelper;
+import fr.enac.goshopping.notification.LocationNotificationActivity;
 import fr.enac.goshopping.objects.Shop;
 import fr.enac.goshopping.objects.ShoppingListObject;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SettingsFragment.OnFragmentInteractionListener,
-CalendarFragment.OnFragmentInteractionListener, ShoppingListFragment.OnFragmentInteractionListener,
-ShopFragment.OnFragmentInteractionListener, NewShopFragment.OnFragmentInteractionListener,
-        NewArticleFragment.OnFragmentInteractionListener, NewListFragment.OnFragmentInteractionListener{
+        CalendarFragment.OnFragmentInteractionListener, ShoppingListFragment.OnFragmentInteractionListener,
+        ShopFragment.OnFragmentInteractionListener, NewShopFragment.OnFragmentInteractionListener,
+        NewArticleFragment.OnFragmentInteractionListener, NewListFragment.OnFragmentInteractionListener {
 
     private GoShoppingDBHelper dbHelper;
     private FloatingActionButton fab;
@@ -57,6 +65,7 @@ ShopFragment.OnFragmentInteractionListener, NewShopFragment.OnFragmentInteractio
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        testLocation();
     }
 
     @Override
@@ -126,8 +135,8 @@ ShopFragment.OnFragmentInteractionListener, NewShopFragment.OnFragmentInteractio
         return true;
     }
 
-    public void handleFabButton(View view){
-        switch (state){
+    public void handleFabButton(View view) {
+        switch (state) {
             case R.id.nav_go_shopping:
                 break;
             case R.id.nav_calendar:
@@ -135,13 +144,13 @@ ShopFragment.OnFragmentInteractionListener, NewShopFragment.OnFragmentInteractio
             case R.id.nav_shopping_list:
                 fab.setVisibility(View.INVISIBLE);
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.content_main,new NewListFragment())
+                        .replace(R.id.content_main, new NewListFragment())
                         .commit();
                 break;
             case R.id.nav_shop:
                 fab.setVisibility(View.INVISIBLE);
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.content_main,new NewShopFragment())
+                        .replace(R.id.content_main, new NewShopFragment())
                         .commit();
                 break;
             case R.id.nav_settings:
@@ -152,5 +161,27 @@ ShopFragment.OnFragmentInteractionListener, NewShopFragment.OnFragmentInteractio
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    private void testLocation() {
+        LocationManager locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+        Intent resultIntent = new Intent(this, LocationNotificationActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                this,
+                0,
+                resultIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+        );
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        locationManager.addProximityAlert(43.6043657, 1.4411526, 250, -1, pendingIntent);
     }
 }

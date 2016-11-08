@@ -2,6 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="fr.enac.goshopping">
 
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,7 +18,8 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCSreiOxRDSBboeRuIcCeZK-5GfKFoT3WU"/>
+            android:value="AIzaSyCSreiOxRDSBboeRuIcCeZK-5GfKFoT3WU" />
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -22,8 +31,5 @@
             </intent-filter>
         </activity>
     </application>
-    <uses-feature
-        android:glEsVersion="0x00020000"
-        android:required="true"/>
 
 </manifest>
