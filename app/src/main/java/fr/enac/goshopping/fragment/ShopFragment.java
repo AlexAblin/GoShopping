@@ -1,12 +1,15 @@
 package fr.enac.goshopping.fragment;
 
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -15,6 +18,7 @@ import java.util.ArrayList;
 import fr.enac.goshopping.R;
 import fr.enac.goshopping.database.GoShoppingDBHelper;
 import fr.enac.goshopping.listadapters.ShopListArrayAdapter;
+import fr.enac.goshopping.objects.Shop;
 
 
 /**
@@ -36,6 +40,7 @@ public class ShopFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private FloatingActionButton fab;
 
     public ShopFragment() {
         // Required empty public constructor
@@ -71,11 +76,24 @@ public class ShopFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+       final  Fragment f= this;
         View v = inflater.inflate(R.layout.fragment_shop, container, false);
-        ArrayList list = new GoShoppingDBHelper(getContext()).getShops();
+        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.setVisibility(View.VISIBLE);
+        final ArrayList<Shop> list = new GoShoppingDBHelper(getContext()).getShops();
         ListView listView = (ListView) v.findViewById(R.id.shopList);
         ArrayAdapter adapter = new ShopListArrayAdapter(getActivity(), R.layout.element_list_shop_layout, list);
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                new GoShoppingDBHelper(getContext()).deleteShop(list.get(position));
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.detach(f).attach(f).commit();
+
+            }
+        });
+
         return v;
     }
 

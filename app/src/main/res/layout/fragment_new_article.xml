@@ -34,5 +34,11 @@
             android:id="@+id/manage_article_quantity"
             android:hint="quantité" />
 
+        <Button
+            android:text="Ajouter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonNewArticle" />
+
     </LinearLayout>
 </FrameLayout>

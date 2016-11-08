@@ -140,6 +140,11 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.insert(GoShoppingDBContract.ShopTable.TABLE_NAME,null,values);
     }
 
+    public int deleteShop(Shop shop){
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        return sqLiteDatabase.delete("shops","shop=?",new String[]{shop.getName()});
+    }
+
     public ArrayList<ShoppingListObject> getShoppingLists(){
         ArrayList<ShoppingListObject> toReturn = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
@@ -183,6 +188,11 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.insert(GoShoppingDBContract.ShoppingList.TABLE_NAME,null,values);
     }
 
+    public int deleteShoppingList(ShoppingListObject shopList){
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        return sqLiteDatabase.delete("shoppingLists","ListName=?",new String[]{shopList.getList_name()});
+    }
+
     public ArrayList<Product> getArticles(){
         ArrayList<Product> toReturn = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
@@ -223,9 +233,18 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
         values.put(GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_SHELF, prod.getCategory());
         //values.put(GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_QTY, prod.getQuantity());
 
+
         //On insère le tuple
         sqLiteDatabase.insert(GoShoppingDBContract.ArticleTable.TABLE_NAME,null,values);
     }
+
+    public int deleteArticle(Product prod){
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        return sqLiteDatabase.delete("articles","Article=?",new String[]{prod.getName()});
+    }
+
+
+
 
 
 }

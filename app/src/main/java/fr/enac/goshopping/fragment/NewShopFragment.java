@@ -96,6 +96,7 @@ public class NewShopFragment extends Fragment {
         postCode = (EditText) v.findViewById(R.id.manage_shop_postcode);
         saveButton = (Button) v.findViewById(R.id.manage_shop_search);
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.setVisibility(View.GONE);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

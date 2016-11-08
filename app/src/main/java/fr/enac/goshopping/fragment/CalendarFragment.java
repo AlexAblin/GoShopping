@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,7 @@ public class CalendarFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private FloatingActionButton fab;
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -73,26 +75,9 @@ public class CalendarFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.setVisibility(View.VISIBLE);
         View v= inflater.inflate(R.layout.fragment_calendar, container, false);
-        ListView calendar_list= (ListView)v.findViewById(R.id.calendar_list);
-        ArrayList<ShoppingListObject> list = new GoShoppingDBHelper(getContext()).getShoppingLists();
-        ArrayList<String>listName= new ArrayList<>();
-        for(ShoppingListObject s:list){
-            listName.add(s.getList_name());
-        }
-        ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, listName);
-        calendar_list.setAdapter(adapter);
-        calendar_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                FragmentManager fm = getActivity().getFragmentManager();
-                fm.beginTransaction()
-                        .replace(R.id.content_main,new RappelsFragment())
-                        .addToBackStack(null)
-                        .commit();
-            }
-        });
-
         return v;
     }
 

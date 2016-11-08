@@ -52,4 +52,6 @@ public class ShopListArrayAdapter extends ArrayAdapter<Shop> {
 
         return view;
     }
+
+
 }

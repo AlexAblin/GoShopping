@@ -1,5 +1,6 @@
 package fr.enac.goshopping.fragment;
 
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.net.Uri;
@@ -10,10 +11,12 @@ import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import fr.enac.goshopping.MainActivity;
 import fr.enac.goshopping.R;
 import fr.enac.goshopping.database.GoShoppingDBHelper;
 import fr.enac.goshopping.objects.ShoppingListObject;
@@ -81,13 +84,16 @@ public class NewListFragment extends Fragment {
         View v= inflater.inflate(R.layout.fragment_new_list, container, false);
         name = (EditText) v.findViewById(R.id.manage_list_name);
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        fab.setVisibility(View.GONE);
+        saveButton=(Button)v.findViewById(R.id.buttonNewList);
+        saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(!name.getText().toString().equals("")) {
                     ShoppingListObject list = new ShoppingListObject(null, name.getText().toString(), "aucun magasin associe");
                     new GoShoppingDBHelper(getActivity()).addShoppingList(list);
                     FragmentManager fragmentManager = getActivity().getFragmentManager();
+                    ((Activity)getContext()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
                     fragmentManager.beginTransaction()
                             .replace(R.id.content_main, new ShoppingListFragment())
                             .commit();

@@ -150,18 +150,24 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_go_shopping:
                 break;
             case R.id.nav_calendar:
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.content_main,new RappelsFragment())
+                        .addToBackStack(null)
+                        .commit();
                 break;
             case R.id.nav_shopping_list:
                 //fab.setVisibility(View.INVISIBLE);
                 getFragmentManager().beginTransaction()
                         .replace(R.id.content_main,new NewListFragment())
+                        .addToBackStack(null)
                         .commit();
                 break;
             case R.id.nav_shop:
-                fab.setVisibility(View.INVISIBLE);
+                //fab.setVisibility(View.INVISIBLE);
                 getFragmentManager().beginTransaction()
                         .addToBackStack(null)
                         .replace(R.id.content_main, new NewShopFragment())
+                        .addToBackStack(null)
                         .commit();
                 break;
             case R.id.nav_settings:

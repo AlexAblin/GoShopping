@@ -70,6 +70,7 @@ public class ShoppingListFragment extends Fragment {
 
 
 
+
     }
 
     @Override
@@ -77,6 +78,7 @@ public class ShoppingListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.setVisibility(View.VISIBLE);
         View v= inflater.inflate(R.layout.fragment_shopping_list, container, false);
         ArrayList list = new GoShoppingDBHelper(getContext()).getShoppingLists();
         ListView listView = (ListView) v.findViewById(R.id.shopping_list_list);

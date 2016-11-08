@@ -1,15 +1,24 @@
 package fr.enac.goshopping.fragment;
 
+import android.app.FragmentManager;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TimePicker;
 
+import java.util.ArrayList;
+
 import fr.enac.goshopping.R;
+import fr.enac.goshopping.database.GoShoppingDBHelper;
+import fr.enac.goshopping.objects.ShoppingListObject;
 
 
 /**
@@ -31,6 +40,7 @@ public class RappelsFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private FloatingActionButton fab;
 
     public RappelsFragment() {
         // Required empty public constructor
@@ -68,8 +78,24 @@ public class RappelsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v= inflater.inflate(R.layout.fragment_rappels, container, false);
+        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.setVisibility(View.GONE);
         TimePicker t= (TimePicker) v.findViewById(R.id.timePicker);
         t.setIs24HourView(true);
+        ListView calendar_list= (ListView)v.findViewById(R.id.manage_rappel_list);
+        ArrayList<ShoppingListObject> list = new GoShoppingDBHelper(getContext()).getShoppingLists();
+        ArrayList<String>listName= new ArrayList<>();
+        for(ShoppingListObject s:list){
+            listName.add(s.getList_name());
+        }
+        ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, listName);
+        calendar_list.setAdapter(adapter);
+        calendar_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //TODO: creer un evenement pour la liste
+            }
+        });
         return v;
     }
 

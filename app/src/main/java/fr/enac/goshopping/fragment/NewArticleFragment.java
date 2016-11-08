@@ -83,8 +83,9 @@ public class NewArticleFragment extends Fragment {
         name = (EditText) v.findViewById(R.id.manage_article_name);
         quantity = (EditText) v.findViewById(R.id.manage_article_quantity);
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        //fab.setVisibility(View.GONE);
-        fab.setOnClickListener(new View.OnClickListener() {
+        fab.setVisibility(View.GONE);
+        saveButton= (Button) v.findViewById(R.id.buttonNewArticle) ;
+        saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(!name.getText().toString().equals("")) {
