@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,20 +89,23 @@ public class NewShopFragment extends Fragment {
         adress = (EditText) v.findViewById(R.id.manage_shop_adress);
         city = (EditText) v.findViewById(R.id.manage_shop_city);
         postCode = (EditText) v.findViewById(R.id.manage_shop_postcode);
-        saveButton = (Button) v.findViewById(R.id.manage_shop_save);
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        saveButton.setOnClickListener(new View.OnClickListener() {
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Shop shop = new Shop(null,name.getText().toString(),adress.getText().toString(),
-                        city.getText().toString(),postCode.getText().toString());
-                new GoShoppingDBHelper(getActivity()).addShop(shop);
-                FragmentManager fragmentManager = getActivity().getFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.content_main,new ShopFragment())
-                        .commit();
-                fab.setVisibility(View.VISIBLE);
-                Toast.makeText(getContext(), "Magasin enregistré.", Toast.LENGTH_SHORT).show();
+                if(!name.getText().toString().equals("")) {
+                    Shop shop = new Shop(null, name.getText().toString(), adress.getText().toString(),
+                            city.getText().toString(), postCode.getText().toString());
+                    new GoShoppingDBHelper(getActivity()).addShop(shop);
+                    FragmentManager fragmentManager = getActivity().getFragmentManager();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.content_main, new ShopFragment())
+                            .commit();
+                    Toast.makeText(getContext(), "Magasin enregistré.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Snackbar.make(view, "Nom de magasin incorrect", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
             }
         });
         return v;

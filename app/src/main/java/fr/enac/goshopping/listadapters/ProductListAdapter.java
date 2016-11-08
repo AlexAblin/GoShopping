@@ -57,21 +57,6 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         productName.setText(prod.getName());
         productCategory.setText(prod.getCategory());
         productQuantity.setText(String.valueOf(prod.getQuantity()));
-        Button b= (Button) view.findViewById(R.id.buttonAdd);
-        if(position==list.size()-1){
-            b.setVisibility(View.VISIBLE);
-        } else {
-            b.setVisibility(View.GONE);
-        }
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager fm = ((Activity) context).getFragmentManager();
-                fm.beginTransaction()
-                        .replace(R.id.content_main,new NewArticleFragment())
-                        .commit();
-            }
-        });
         return view;
     }
 

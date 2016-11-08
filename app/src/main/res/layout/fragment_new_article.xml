@@ -34,10 +34,5 @@
             android:id="@+id/manage_article_quantity"
             android:hint="quantité" />
 
-        <Button
-            android:text="Enregistrer"
-            android:layout_width="149dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/SaveArticle" />
     </LinearLayout>
 </FrameLayout>

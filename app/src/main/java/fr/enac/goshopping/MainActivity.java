@@ -135,8 +135,8 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    public void handleFabButton(View view) {
-        switch (state) {
+    public void handleFabButton(View view){
+        switch (state){
             case R.id.nav_go_shopping:
                 break;
             case R.id.nav_calendar:
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_shopping_list:
                 fab.setVisibility(View.INVISIBLE);
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.content_main, new NewListFragment())
+                        .replace(R.id.content_main,new NewListFragment())
                         .commit();
                 break;
             case R.id.nav_shop:

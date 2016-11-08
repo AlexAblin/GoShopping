@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,19 +81,21 @@ public class NewListFragment extends Fragment {
         View v= inflater.inflate(R.layout.fragment_new_list, container, false);
         name = (EditText) v.findViewById(R.id.manage_list_name);
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.setVisibility(View.GONE);
-        saveButton= (Button) v.findViewById(R.id.saveList);
-        saveButton.setOnClickListener(new View.OnClickListener() {
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ShoppingListObject list = new ShoppingListObject(null,name.getText().toString(),"aucun magasin associe");
-                new GoShoppingDBHelper(getActivity()).addShoppingList(list);
-                FragmentManager fragmentManager = getActivity().getFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.content_main,new ShoppingListFragment())
-                        .commit();
-                fab.setVisibility(View.VISIBLE);
-                Toast.makeText(getContext(), "Liste crée.", Toast.LENGTH_SHORT).show();
+                if(!name.getText().toString().equals("")) {
+                    ShoppingListObject list = new ShoppingListObject(null, name.getText().toString(), "aucun magasin associe");
+                    new GoShoppingDBHelper(getActivity()).addShoppingList(list);
+                    FragmentManager fragmentManager = getActivity().getFragmentManager();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.content_main, new ShoppingListFragment())
+                            .commit();
+                    Toast.makeText(getContext(), "Liste crée.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Snackbar.make(view, "Nom de liste incorrect", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
             }
         });
         return v;
