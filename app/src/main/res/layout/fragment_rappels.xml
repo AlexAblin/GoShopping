@@ -20,13 +20,14 @@
 
         <ListView
             android:layout_width="match_parent"
-            android:layout_height="143dp"
+            android:layout_height="122dp"
             android:id="@+id/manage_rappel_list" />
 
         <TimePicker
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/timePicker" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/timePicker"
+            android:layout_weight="0.63" />
     </LinearLayout>
 
 </FrameLayout>

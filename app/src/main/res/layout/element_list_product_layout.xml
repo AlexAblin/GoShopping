@@ -9,24 +9,29 @@
         android:layout_width="match_parent"
         android:layout_height="40dp">
 
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/checkBox" />
+
         <TextView
             android:text="TextView"
             android:layout_width="wrap_content"
-            android:layout_height="44dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:id="@+id/ProductName" />
 
         <TextView
             android:text="TextView"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:id="@+id/ProductCategorie"
             android:layout_weight="1" />
 
         <TextView
             android:text="TextView"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/ProductQuantity"
             android:layout_weight="0.45" />
 

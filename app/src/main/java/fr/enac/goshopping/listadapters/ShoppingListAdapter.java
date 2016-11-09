@@ -48,12 +48,12 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingListObject> {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE); view = inflater.inflate(resource, parent, false);
         }
-        ArrayList<Product> listProduct = new GoShoppingDBHelper(context).getArticles();
-        ArrayAdapter adapter= new ProductListAdapter(context,R.layout.element_list_product_layout,listProduct);
+        //ArrayList<Product> listProduct = new GoShoppingDBHelper(context).getArticles();
+        //ArrayAdapter adapter= new ProductListAdapter(context,R.layout.element_list_product_layout,listProduct);
         ShoppingListObject listItem=list.get(position);
-        Spinner p= (Spinner) view.findViewById(R.id.spinnerList);
-        p.setAdapter(adapter);
-        p.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        //Spinner p= (Spinner) view.findViewById(R.id.spinnerList);
+        //p.setAdapter(adapter);
+        /*p.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 TextView t= (TextView)view.findViewById(R.id.ProductName);
@@ -64,11 +64,11 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingListObject> {
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
-        });
+        });*/
         TextView t= (TextView)view.findViewById(R.id.NomListe);
         t.setText(listItem.getList_name());
 
-        Button b= (Button) view.findViewById(R.id.buttonAdd);
+        /*Button b= (Button) view.findViewById(R.id.buttonAdd);
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,11 +77,11 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingListObject> {
                         .replace(R.id.content_main,new NewArticleFragment())
                         .commit();
             }
-        });
+        });*/
 
 
 
-        final CheckBox cb= (CheckBox) view.findViewById(R.id.checkBoxList);
+        /*final CheckBox cb= (CheckBox) view.findViewById(R.id.checkBoxList);
         final TextView tname=(TextView) view.findViewById(R.id.ProductName);
         cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -92,7 +92,7 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingListObject> {
                     System.out.println("decoche");
                 }
             }
-        });
+        });*/
         return view;
     }
 }

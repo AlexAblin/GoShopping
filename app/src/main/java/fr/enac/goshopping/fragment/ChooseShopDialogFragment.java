@@ -43,6 +43,7 @@ public class ChooseShopDialogFragment extends DialogFragment {
 
     public void setList(List<Address> mapShops){
         int i = 0;
+        this.addresses = mapShops;
         CharSequence current = "";
         Address currentAddress;
         toDisplay = new CharSequence[addresses.size()];
@@ -58,6 +59,7 @@ public class ChooseShopDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        System.out.println("Coucou");
         builder.setTitle("Choisissez votre magasin")
                 .setItems(toDisplay, new DialogInterface.OnClickListener() {
                     @Override
