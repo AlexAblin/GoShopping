@@ -37,8 +37,8 @@ public class NewListFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String listId;
+    private String listName;
 
     private OnFragmentInteractionListener mListener;
 
@@ -72,8 +72,8 @@ public class NewListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            listId = getArguments().getString(ARG_PARAM1);
+            listName = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -91,13 +91,15 @@ public class NewListFragment extends Fragment {
             public void onClick(View view) {
                 if(!name.getText().toString().equals("")) {
                     ShoppingListObject list = new ShoppingListObject(null, name.getText().toString(), "aucun magasin associe");
-                    new GoShoppingDBHelper(getActivity()).addShoppingList(list);
+                    long lastInsertedId = new GoShoppingDBHelper(getActivity()).addShoppingList(list);
+                    list.set_ID(""+lastInsertedId);
                     FragmentManager fragmentManager = getActivity().getFragmentManager();
                     ((Activity)getContext()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
                     fragmentManager.beginTransaction()
-                            .replace(R.id.content_main, new ShoppingListFragment())
+                            .replace(R.id.content_main, new ShoppingListFragment().newInstance(listId,listName))
                             .commit();
                     Toast.makeText(getContext(), "Liste crée.", Toast.LENGTH_SHORT).show();
+
                 } else {
                     Snackbar.make(view, "Nom de liste incorrect", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();

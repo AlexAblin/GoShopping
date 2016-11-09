@@ -83,15 +83,16 @@ public class ShoppingListFragment extends Fragment {
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.VISIBLE);
         View v= inflater.inflate(R.layout.fragment_shopping_list, container, false);
-        final ArrayList list = new GoShoppingDBHelper(getContext()).getShoppingLists();
+        final ArrayList<ShoppingListObject> list = new GoShoppingDBHelper(getContext()).getShoppingLists();
         ListView listView = (ListView) v.findViewById(R.id.shopping_list_list);
         ArrayAdapter adapter = new ShoppingListAdapter(getActivity(), R.layout.element_list_shopping_layout, list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ShoppingListObject selected = (ShoppingListObject) list.get(position);
+                ShoppingListObject selected = list.get(position);
                 System.out.println(selected.getList_name());
+                System.out.println(" id de la list "+selected.get_ID());
                 Fragment viewList = ShoppingListContent.newInstance(selected.get_ID(),selected.getList_name());
                 FragmentManager fragmentManager = getActivity().getFragmentManager();
                 fragmentManager.beginTransaction()

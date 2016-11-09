@@ -9,10 +9,16 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import fr.enac.goshopping.R;
+import fr.enac.goshopping.database.GoShoppingDBHelper;
+import fr.enac.goshopping.listadapters.ProductListAdapter;
+import fr.enac.goshopping.objects.Product;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,8 +31,8 @@ import fr.enac.goshopping.R;
 public class ShoppingListContent extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String LIST_ID = "param1";
-    private static final String LIST_NAME = "param2";
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
 
     private FloatingActionButton fabButton;
     private ListView liste;
@@ -54,8 +60,8 @@ public class ShoppingListContent extends Fragment {
     public static ShoppingListContent newInstance(String list_id, String list_name) {
         ShoppingListContent fragment = new ShoppingListContent();
         Bundle args = new Bundle();
-        args.putString(LIST_ID, list_id);
-        args.putString(LIST_NAME, list_name);
+        args.putString(ARG_PARAM1, list_id);
+        args.putString(ARG_PARAM2, list_name);
         fragment.setArguments(args);
         return fragment;
     }
@@ -64,8 +70,8 @@ public class ShoppingListContent extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            list_id = getArguments().getString(LIST_ID);
-            list_name = getArguments().getString(LIST_NAME);
+            list_id = getArguments().getString(ARG_PARAM1);
+            list_name = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -79,7 +85,10 @@ public class ShoppingListContent extends Fragment {
         liste = (ListView) v.findViewById(R.id.list_content_list);
         fabButton = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         //System.out.println(fabButton);
-
+        final ArrayList list = new GoShoppingDBHelper(getContext()).getArticles(list_id);
+        liste= (ListView) v.findViewById(R.id.list_content_list);
+        ArrayAdapter<Product> adapter= new ProductListAdapter(getActivity(), R.layout.element_list_product_layout, list);
+        liste.setAdapter(adapter);
         fabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

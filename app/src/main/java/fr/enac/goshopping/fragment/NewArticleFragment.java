@@ -91,7 +91,7 @@ public class NewArticleFragment extends Fragment {
             public void onClick(View view) {
                 if(!name.getText().toString().equals("")) {
                     GoShoppingDBHelper goShoppingDBHelper = new GoShoppingDBHelper(getActivity());
-                    Product prod = new Product(null, name.getText().toString(), "test", quantity.getText().toString());
+                    Product prod = new Product(null, name.getText().toString(), listName, quantity.getText().toString());
                     long lastInsertedId = goShoppingDBHelper.addArticle(prod);
                     prod.set_id("" + lastInsertedId);
                     goShoppingDBHelper.addArticleToList(listId, prod);

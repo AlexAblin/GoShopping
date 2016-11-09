@@ -33,7 +33,7 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         //On supprime toute les tables (pour essai et modification pendant dévellopement)
-        /*sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + GoShoppingDBContract.ShopTable.TABLE_NAME);
+      /* sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + GoShoppingDBContract.ShopTable.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + GoShoppingDBContract.ShelfTable.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + GoShoppingDBContract.ShoppingList.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + GoShoppingDBContract.ArticleTable.TABLE_NAME);
@@ -181,7 +181,7 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
 
         //On lie les données du magasin au conteneur
         values.put(GoShoppingDBContract.ShoppingList.COLUMN_NAME_LIST_NAME, list.getList_name());
-       values.put(GoShoppingDBContract.ShoppingList.COLUMN_NAME_LIST_SHOP, list.getShop());
+        values.put(GoShoppingDBContract.ShoppingList.COLUMN_NAME_LIST_SHOP, list.getShop());
         //values.put(GoShoppingDBContract.ShoppingList.COLUMN_NAME_SHOP_CITY, shop.getCity());
 
         //On insère le tuple
@@ -216,6 +216,35 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
         if(c.moveToFirst()){
             do{
                 toAdd = new Product(null,c.getString(0),c.getString(1),"1");
+                toReturn.add(toAdd);
+            }while (c.moveToNext());
+        }
+        return toReturn;
+    }
+
+    public ArrayList<Product> getArticles(String list_id){
+        ArrayList<Product> toReturn = new ArrayList<>();
+        String[] whereArgs= new String[]{list_id};
+        SQLiteDatabase db = getReadableDatabase();
+        String[] projection = {
+                GoShoppingDBContract.ShoppingListContent.COLUMN_NAME_LIST_ID,
+                GoShoppingDBContract.ShoppingListContent.COLUMN_NAME_PRODUCT_ID,
+                GoShoppingDBContract.ShoppingListContent.COLUMN_NAME_QUANTITY,
+        };
+        String sortOrder = GoShoppingDBContract.ShoppingListContent.COLUMN_NAME_PRODUCT_ID + " ASC";
+        Cursor c = db.query(
+                GoShoppingDBContract.ShoppingListContent.TABLE_NAME,// The table to query
+                projection,                               // The columns to return
+                "List_ID=?",                               // The columns for the WHERE clause
+                whereArgs,                                 // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                sortOrder                                 // The sort order
+        );
+        Product toAdd;
+        if(c.moveToFirst()){
+            do{
+                toAdd = new Product(c.getString(0),c.getString(1),"test",c.getString(2));
                 toReturn.add(toAdd);
             }while (c.moveToNext());
         }
