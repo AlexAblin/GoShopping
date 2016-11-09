@@ -31,6 +31,7 @@ import fr.enac.goshopping.fragment.NewShopFragment;
 import fr.enac.goshopping.fragment.RappelsFragment;
 import fr.enac.goshopping.fragment.SettingsFragment;
 import fr.enac.goshopping.fragment.ShopFragment;
+import fr.enac.goshopping.fragment.ShoppingListContent;
 import fr.enac.goshopping.fragment.ShoppingListFragment;
 import fr.enac.goshopping.notification.LocationNotificationActivity;
 
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity
         CalendarFragment.OnFragmentInteractionListener, ShoppingListFragment.OnFragmentInteractionListener,
         ShopFragment.OnFragmentInteractionListener, NewShopFragment.OnFragmentInteractionListener,
         NewArticleFragment.OnFragmentInteractionListener, NewListFragment.OnFragmentInteractionListener,
-        RappelsFragment.OnFragmentInteractionListener{
+        RappelsFragment.OnFragmentInteractionListener, ShoppingListContent.OnFragmentInteractionListener{
 
     private int MY_PERMISSIONS_REQUEST_FINE_LOCATION;
     private GoShoppingDBHelper dbHelper;
@@ -84,7 +85,12 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    handleFabButton(v);
+                }
+            });
         }
     }
 

@@ -14,7 +14,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Creer une nouvelle liste de Course"
+            android:text="Créer une liste de courses"
             android:id="@+id/manage_list_title"
             android:textAppearance="@android:style/TextAppearance.Material.Large" />
 

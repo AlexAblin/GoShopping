@@ -9,39 +9,36 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
-import java.util.ArrayList;
+import android.widget.TextView;
 
 import fr.enac.goshopping.R;
-import fr.enac.goshopping.database.GoShoppingDBHelper;
-import fr.enac.goshopping.listadapters.ShoppingListAdapter;
-import fr.enac.goshopping.objects.ShoppingListObject;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ShoppingListFragment.OnFragmentInteractionListener} interface
+ * {@link ShoppingListContent.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link ShoppingListFragment#newInstance} factory method to
+ * Use the {@link ShoppingListContent#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ShoppingListFragment extends Fragment {
+public class ShoppingListContent extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String LIST_ID = "param1";
+    private static final String LIST_NAME = "param2";
+
+    private FloatingActionButton fabButton;
+    private ListView liste;
+    private TextView title;
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String list_id;
+    private String list_name;
 
     private OnFragmentInteractionListener mListener;
-    private FloatingActionButton fab;
 
-    public ShoppingListFragment() {
+    public ShoppingListContent() {
         // Required empty public constructor
     }
 
@@ -49,16 +46,16 @@ public class ShoppingListFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ShoppingListFragment.
+     * @param list_id The list database identifier.
+     * @param list_name The list name.
+     * @return A new instance of fragment ShoppingListContent.
      */
     // TODO: Rename and change types and number of parameters
-    public static ShoppingListFragment newInstance(String param1, String param2) {
-        ShoppingListFragment fragment = new ShoppingListFragment();
+    public static ShoppingListContent newInstance(String list_id, String list_name) {
+        ShoppingListContent fragment = new ShoppingListContent();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(LIST_ID, list_id);
+        args.putString(LIST_NAME, list_name);
         fragment.setArguments(args);
         return fragment;
     }
@@ -67,40 +64,35 @@ public class ShoppingListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            list_id = getArguments().getString(LIST_ID);
+            list_name = getArguments().getString(LIST_NAME);
         }
-
-
-
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.setVisibility(View.VISIBLE);
-        View v= inflater.inflate(R.layout.fragment_shopping_list, container, false);
-        final ArrayList list = new GoShoppingDBHelper(getContext()).getShoppingLists();
-        ListView listView = (ListView) v.findViewById(R.id.shopping_list_list);
-        ArrayAdapter adapter = new ShoppingListAdapter(getActivity(), R.layout.element_list_shopping_layout, list);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        View v= inflater.inflate(R.layout.fragment_shopping_list_content, container, false);
+        title = (TextView) v.findViewById(R.id.list_content_list_title);
+        title.setText(list_name);
+        liste = (ListView) v.findViewById(R.id.list_content_list);
+        fabButton = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        //System.out.println(fabButton);
+
+        fabButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ShoppingListObject selected = (ShoppingListObject) list.get(position);
-                System.out.println(selected.getList_name());
-                Fragment viewList = ShoppingListContent.newInstance(selected.get_ID(),selected.getList_name());
-                FragmentManager fragmentManager = getActivity().getFragmentManager();
+            public void onClick(View v) {
+                NewArticleFragment newArticleFragment = NewArticleFragment.newInstance(list_id,list_name);
+                FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction()
-                        .replace(R.id.content_main, viewList)
+                        .replace(R.id.content_main, newArticleFragment)
                         .addToBackStack(null)
                         .commit();
             }
         });
-        fab.setVisibility(View.VISIBLE);
+
+
         return v;
     }
 

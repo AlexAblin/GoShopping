@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import fr.enac.goshopping.MainActivity;
 import fr.enac.goshopping.R;
 import fr.enac.goshopping.database.GoShoppingDBHelper;
 import fr.enac.goshopping.objects.Product;
@@ -34,8 +35,8 @@ public class NewArticleFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String listId;
+    private String listName;
 
     private OnFragmentInteractionListener mListener;
 
@@ -52,16 +53,16 @@ public class NewArticleFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param listName Parameter 1.
+     * @param listName Parameter 2.
      * @return A new instance of fragment NewArticleFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static NewArticleFragment newInstance(String param1, String param2) {
+    public static NewArticleFragment newInstance(String listId, String listName) {
         NewArticleFragment fragment = new NewArticleFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM1, listId);
+        args.putString(ARG_PARAM2, listName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -70,8 +71,8 @@ public class NewArticleFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            listId = getArguments().getString(ARG_PARAM1);
+            listName = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -89,13 +90,23 @@ public class NewArticleFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if(!name.getText().toString().equals("")) {
+                    GoShoppingDBHelper goShoppingDBHelper = new GoShoppingDBHelper(getActivity());
                     Product prod = new Product(null, name.getText().toString(), "test", quantity.getText().toString());
-                    new GoShoppingDBHelper(getActivity()).addArticle(prod);
+                    long lastInsertedId = goShoppingDBHelper.addArticle(prod);
+                    prod.set_id("" + lastInsertedId);
+                    goShoppingDBHelper.addArticleToList(listId, prod);
                     FragmentManager fragmentManager = getActivity().getFragmentManager();
                     fragmentManager.beginTransaction()
-                            .replace(R.id.content_main, new ShoppingListFragment())
+                            .replace(R.id.content_main, ShoppingListContent.newInstance(listId,listName))
                             .commit();
                     Toast.makeText(getContext(), "Article enregistré.", Toast.LENGTH_SHORT).show();
+                    fab.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ((MainActivity) getActivity()).handleFabButton(v);
+                        }
+                    });
+                    fab.setVisibility(View.VISIBLE);
                 } else {
                     Snackbar.make(view, "Nom d'article incorrect", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();

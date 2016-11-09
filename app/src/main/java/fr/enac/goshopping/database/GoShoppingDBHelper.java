@@ -173,7 +173,7 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
         return toReturn;
     }
 
-    public void addShoppingList(ShoppingListObject list){
+    public long addShoppingList(ShoppingListObject list){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
         //Conteneur d'un tuple à insérer
@@ -185,7 +185,7 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
         //values.put(GoShoppingDBContract.ShoppingList.COLUMN_NAME_SHOP_CITY, shop.getCity());
 
         //On insère le tuple
-        sqLiteDatabase.insert(GoShoppingDBContract.ShoppingList.TABLE_NAME,null,values);
+        return sqLiteDatabase.insert(GoShoppingDBContract.ShoppingList.TABLE_NAME,null,values);
     }
 
     public int deleteShoppingList(ShoppingListObject shopList){
@@ -222,7 +222,7 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
         return toReturn;
     }
 
-    public void addArticle(Product prod){
+    public long addArticle(Product prod){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
         //Conteneur d'un tuple à insérer
@@ -235,12 +235,24 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
 
 
         //On insère le tuple
-        sqLiteDatabase.insert(GoShoppingDBContract.ArticleTable.TABLE_NAME,null,values);
+        return sqLiteDatabase.insert(GoShoppingDBContract.ArticleTable.TABLE_NAME,null,values);
     }
 
     public int deleteArticle(Product prod){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         return sqLiteDatabase.delete("articles","Article=?",new String[]{prod.getName()});
+    }
+
+    public void addArticleToList(String listId, Product article){
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put(GoShoppingDBContract.ShoppingListContent.COLUMN_NAME_LIST_ID, listId);
+        values.put(GoShoppingDBContract.ShoppingListContent.COLUMN_NAME_PRODUCT_ID, article.get_id());
+        values.put(GoShoppingDBContract.ShoppingListContent.COLUMN_NAME_QUANTITY, article.getQuantity());
+
+        sqLiteDatabase.insert(GoShoppingDBContract.ShoppingListContent.TABLE_NAME,null,values);
     }
 
 
