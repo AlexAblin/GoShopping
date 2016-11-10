@@ -33,7 +33,7 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         //On supprime toute les tables (pour essai et modification pendant dévellopement)
-      /* sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + GoShoppingDBContract.ShopTable.TABLE_NAME);
+        /*sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + GoShoppingDBContract.ShopTable.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + GoShoppingDBContract.ShelfTable.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + GoShoppingDBContract.ShoppingList.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + GoShoppingDBContract.ArticleTable.TABLE_NAME);
@@ -164,8 +164,10 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
                 sortOrder                                 // The sort order
         );
         ShoppingListObject toAdd;
+
         if(c.moveToFirst()){
             do{
+                System.out.println("Sorti de la DB " + c.getString(0));
                 toAdd = new ShoppingListObject(c.getString(0),c.getString(1),"magasin");
                 toReturn.add(toAdd);
             }while (c.moveToNext());
@@ -185,7 +187,9 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
         //values.put(GoShoppingDBContract.ShoppingList.COLUMN_NAME_SHOP_CITY, shop.getCity());
 
         //On insère le tuple
-        return sqLiteDatabase.insert(GoShoppingDBContract.ShoppingList.TABLE_NAME,null,values);
+        long toReturn = sqLiteDatabase.insert(GoShoppingDBContract.ShoppingList.TABLE_NAME,null,values);
+        System.out.println("Output de la DB su la création d'une shopping list : " + toReturn);
+        return toReturn;
     }
 
     public int deleteShoppingList(ShoppingListObject shopList){
@@ -224,6 +228,7 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
 
     public ArrayList<Product> getArticles(String list_id){
         ArrayList<Product> toReturn = new ArrayList<>();
+        System.out.println("Gestion de la base de donnée : valeur recu par getArticle " + list_id);
         String[] whereArgs= new String[]{list_id};
         SQLiteDatabase db = getReadableDatabase();
         String[] projection = {

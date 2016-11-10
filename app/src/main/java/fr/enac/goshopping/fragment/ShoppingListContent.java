@@ -85,6 +85,7 @@ public class ShoppingListContent extends Fragment {
         liste = (ListView) v.findViewById(R.id.list_content_list);
         fabButton = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         //System.out.println(fabButton);
+        //System.out.println("ID de la liste " + this.list_id);
         final ArrayList list = new GoShoppingDBHelper(getContext()).getArticles(list_id);
         liste= (ListView) v.findViewById(R.id.list_content_list);
         ArrayAdapter<Product> adapter= new ProductListAdapter(getActivity(), R.layout.element_list_product_layout, list);

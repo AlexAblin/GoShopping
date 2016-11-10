@@ -92,7 +92,6 @@ public class ShoppingListFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ShoppingListObject selected = list.get(position);
                 System.out.println(selected.getList_name());
-                System.out.println(" id de la list "+selected.get_ID());
                 Fragment viewList = ShoppingListContent.newInstance(selected.get_ID(),selected.getList_name());
                 FragmentManager fragmentManager = getActivity().getFragmentManager();
                 fragmentManager.beginTransaction()
