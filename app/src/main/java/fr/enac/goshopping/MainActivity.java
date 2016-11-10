@@ -123,6 +123,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -143,7 +144,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -176,7 +177,7 @@ public class MainActivity extends AppCompatActivity
 
         fragmentManager.beginTransaction()
                 .replace(R.id.content_main, toCommit)
-                .addToBackStack(null)
+                .addToBackStack("MainActivity")
                 .commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -191,14 +192,14 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_calendar:
                 getFragmentManager().beginTransaction()
                         .replace(R.id.content_main, new RappelsFragment())
-                        .addToBackStack(null)
+                        .addToBackStack("CallendarFrag")
                         .commit();
                 break;
             case R.id.nav_shopping_list:
                 //fab.setVisibility(View.INVISIBLE);
                 getFragmentManager().beginTransaction()
                         .replace(R.id.content_main, new NewListFragment())
-                        .addToBackStack(null)
+                        .addToBackStack("ListFrag")
                         .commit();
                 break;
             case R.id.nav_shop:
@@ -206,7 +207,7 @@ public class MainActivity extends AppCompatActivity
                 getFragmentManager().beginTransaction()
                         .addToBackStack(null)
                         .replace(R.id.content_main, new NewShopFragment())
-                        .addToBackStack(null)
+                        .addToBackStack("ShopFrag")
                         .commit();
                 break;
             case R.id.nav_settings:

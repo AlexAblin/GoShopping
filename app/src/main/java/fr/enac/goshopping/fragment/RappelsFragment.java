@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.design.widget.FloatingActionButton;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,7 +81,8 @@ public class RappelsFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_rappels, container, false);
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.GONE);
-        TimePicker t = (TimePicker) v.findViewById(R.id.timePicker);
+        final TimePicker t = (TimePicker) v.findViewById(R.id.timePicker);
+        t.setVisibility(View.GONE);
         t.setIs24HourView(true);
         ListView calendar_list = (ListView) v.findViewById(R.id.manage_rappel_list);
         ArrayList<ShoppingListObject> list = new GoShoppingDBHelper(getContext()).getShoppingLists();
@@ -93,7 +95,10 @@ public class RappelsFragment extends Fragment {
         calendar_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //TODO: creer un evenement pour la liste
+                t.setVisibility(View.VISIBLE);
+                fab.setVisibility(View.VISIBLE);
+
+
             }
         });
         return v;
@@ -136,5 +141,28 @@ public class RappelsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if(getView() == null){
+            return;
+        }
+
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK){
+                    // handle back button's click listener
+                    getFragmentManager().popBackStack("CallendarFrag", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 }

@@ -9,9 +9,11 @@ import android.provider.Settings;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import fr.enac.goshopping.database.GoShoppingDBContract;
 import fr.enac.goshopping.objects.Product;
+import fr.enac.goshopping.objects.Reminder;
 import fr.enac.goshopping.objects.Shop;
 import fr.enac.goshopping.objects.ShoppingListObject;
 
@@ -33,7 +35,7 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         //On supprime toute les tables (pour essai et modification pendant dévellopement)
-        /*sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + GoShoppingDBContract.ShopTable.TABLE_NAME);
+       /* sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + GoShoppingDBContract.ShopTable.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + GoShoppingDBContract.ShelfTable.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + GoShoppingDBContract.ShoppingList.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + GoShoppingDBContract.ArticleTable.TABLE_NAME);
@@ -175,6 +177,13 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
         return toReturn;
     }
 
+    public void updateShoppingListName(String newName){
+        SQLiteDatabase db = getReadableDatabase();
+        ContentValues args = new ContentValues();
+        args.put("ListName",newName);
+        db.update("ShoppingLists",args,null,null);
+    }
+
     public long addShoppingList(ShoppingListObject list) {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
@@ -309,6 +318,53 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
         values.put(GoShoppingDBContract.ShoppingListContent.COLUMN_NAME_QUANTITY, article.getQuantity());
 
         sqLiteDatabase.insert(GoShoppingDBContract.ShoppingListContent.TABLE_NAME, null, values);
+    }
+
+    public ArrayList<Reminder> getReminder(String list_id) {
+        ArrayList<Reminder> toReturn = new ArrayList<>();
+        String[] whereArgs = new String[]{list_id};
+        SQLiteDatabase db = getReadableDatabase();
+        String[] projection = {
+                GoShoppingDBContract.ReminderTable.COLUMN_NAME_REMINDER_DATE,
+                GoShoppingDBContract.ReminderTable.COLUMN_NAME_REMINDER_LIST,
+        };
+        String sortOrder = GoShoppingDBContract.ReminderTable.COLUMN_NAME_REMINDER_LIST + " ASC";
+        Cursor c = db.query(
+                GoShoppingDBContract.ReminderTable.TABLE_NAME,// The table to query
+                projection,                               // The columns to return
+                "ListReminder=?",                               // The columns for the WHERE clause
+                whereArgs,                                 // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                sortOrder                                 // The sort order
+        );
+        Reminder toAdd;
+        if (c.moveToFirst()) {
+            do {
+                toAdd = new Reminder(c.getString(0), new Date(c.getLong(1)));
+                toReturn.add(toAdd);
+            } while (c.moveToNext());
+        }
+        return toReturn;
+    }
+
+    public long addReminder(Reminder r, int list_id) {
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+
+        //Conteneur d'un tuple à insérer
+        ContentValues values = new ContentValues();
+
+        //On lie les données du magasin au conteneur
+        values.put(GoShoppingDBContract.ReminderTable.COLUMN_NAME_REMINDER_DATE, r.getDate().toString());
+        values.put(GoShoppingDBContract.ReminderTable.COLUMN_NAME_REMINDER_LIST, list_id);
+
+        //On insère le tuple
+        return sqLiteDatabase.insert(GoShoppingDBContract.ReminderTable.TABLE_NAME, null, values);
+    }
+
+    public int deleteReminder(Reminder r) {
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        return sqLiteDatabase.delete("reminders", "ListReminder=?", new String[]{r.getList_name()});
     }
 
 

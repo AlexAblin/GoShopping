@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
         <!--<item
@@ -8,15 +9,15 @@
             android:title="Go! Shopping" />-->
         <item
             android:id="@+id/nav_calendar"
-            android:icon="@drawable/ic_menu_send"
+            android:icon="@drawable/calendar_icon"
             android:title="Calendrier shopping" />
         <item
             android:id="@+id/nav_shopping_list"
-            android:icon="@drawable/ic_menu_send"
+            android:icon="@drawable/list_icon"
             android:title="Liste de courses" />
         <item
             android:id="@+id/nav_shop"
-            android:icon="@drawable/ic_menu_send"
+            android:icon="@drawable/shop_icon"
             android:title="Magasins" />
         <item
             android:id="@+id/nav_settings"

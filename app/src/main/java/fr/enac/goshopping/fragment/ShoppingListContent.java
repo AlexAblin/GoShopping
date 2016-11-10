@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.design.widget.FloatingActionButton;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,7 +95,7 @@ public class ShoppingListContent extends Fragment {
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction()
                         .replace(R.id.content_main, newArticleFragment)
-                        .addToBackStack(null)
+                        .addToBackStack("ListContentFrag")
                         .commit();
             }
         });
@@ -140,5 +141,28 @@ public class ShoppingListContent extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if(getView() == null){
+            return;
+        }
+
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK){
+                    // handle back button's click listener
+                    getFragmentManager().popBackStack("ListFrag", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 }
