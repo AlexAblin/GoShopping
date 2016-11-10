@@ -77,15 +77,15 @@ public class RappelsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v= inflater.inflate(R.layout.fragment_rappels, container, false);
+        View v = inflater.inflate(R.layout.fragment_rappels, container, false);
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.GONE);
-        TimePicker t= (TimePicker) v.findViewById(R.id.timePicker);
+        TimePicker t = (TimePicker) v.findViewById(R.id.timePicker);
         t.setIs24HourView(true);
-        ListView calendar_list= (ListView)v.findViewById(R.id.manage_rappel_list);
+        ListView calendar_list = (ListView) v.findViewById(R.id.manage_rappel_list);
         ArrayList<ShoppingListObject> list = new GoShoppingDBHelper(getContext()).getShoppingLists();
-        ArrayList<String>listName= new ArrayList<>();
-        for(ShoppingListObject s:list){
+        ArrayList<String> listName = new ArrayList<>();
+        for (ShoppingListObject s : list) {
             listName.add(s.getList_name());
         }
         ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, listName);

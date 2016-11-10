@@ -10,11 +10,11 @@ public class Product {
     private String category;
     private String quantity;
 
-    public Product(String _id,String name,String category,String quantity){
+    public Product(String _id, String name, String category, String quantity) {
         this._id = _id;
-        this.name=name;
-        this.category=category;
-        this.quantity=quantity;
+        this.name = name;
+        this.category = category;
+        this.quantity = quantity;
     }
 
     public String getName() {
@@ -29,7 +29,9 @@ public class Product {
         return category;
     }
 
-    public String getQuantity() { return quantity; }
+    public String getQuantity() {
+        return quantity;
+    }
 
     public void setCategory(String category) {
         this.category = category;

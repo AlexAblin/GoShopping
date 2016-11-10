@@ -80,16 +80,16 @@ public class NewArticleFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v= inflater.inflate(R.layout.fragment_new_article, container, false);
+        View v = inflater.inflate(R.layout.fragment_new_article, container, false);
         name = (EditText) v.findViewById(R.id.manage_article_name);
         quantity = (EditText) v.findViewById(R.id.manage_article_quantity);
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.GONE);
-        saveButton= (Button) v.findViewById(R.id.buttonNewArticle) ;
+        saveButton = (Button) v.findViewById(R.id.buttonNewArticle);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!name.getText().toString().equals("")) {
+                if (!name.getText().toString().equals("")) {
                     GoShoppingDBHelper goShoppingDBHelper = new GoShoppingDBHelper(getActivity());
                     Product prod = new Product(null, name.getText().toString(), listName, quantity.getText().toString());
                     long lastInsertedId = goShoppingDBHelper.addArticle(prod);
@@ -97,7 +97,7 @@ public class NewArticleFragment extends Fragment {
                     goShoppingDBHelper.addArticleToList(listId, prod);
                     FragmentManager fragmentManager = getActivity().getFragmentManager();
                     fragmentManager.beginTransaction()
-                            .replace(R.id.content_main, ShoppingListContent.newInstance(listId,listName))
+                            .replace(R.id.content_main, ShoppingListContent.newInstance(listId, listName))
                             .commit();
                     Toast.makeText(getContext(), "Article enregistré.", Toast.LENGTH_SHORT).show();
                     fab.setOnClickListener(new View.OnClickListener() {

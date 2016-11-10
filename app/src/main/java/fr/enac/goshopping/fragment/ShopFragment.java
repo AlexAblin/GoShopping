@@ -76,7 +76,7 @@ public class ShopFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-       final  Fragment f= this;
+        final Fragment f = this;
         View v = inflater.inflate(R.layout.fragment_shop, container, false);
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.VISIBLE);

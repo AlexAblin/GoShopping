@@ -52,7 +52,7 @@ public class ShoppingListContent extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param list_id The list database identifier.
+     * @param list_id   The list database identifier.
      * @param list_name The list name.
      * @return A new instance of fragment ShoppingListContent.
      */
@@ -78,22 +78,19 @@ public class ShoppingListContent extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View v= inflater.inflate(R.layout.fragment_shopping_list_content, container, false);
+        View v = inflater.inflate(R.layout.fragment_shopping_list_content, container, false);
         title = (TextView) v.findViewById(R.id.list_content_list_title);
         title.setText(list_name);
         liste = (ListView) v.findViewById(R.id.list_content_list);
         fabButton = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        //System.out.println(fabButton);
-        //System.out.println("ID de la liste " + this.list_id);
-        final ArrayList list = new GoShoppingDBHelper(getContext()).getArticles(list_id);
-        liste= (ListView) v.findViewById(R.id.list_content_list);
-        ArrayAdapter<Product> adapter= new ProductListAdapter(getActivity(), R.layout.element_list_product_layout, list);
+        final ArrayList list = new GoShoppingDBHelper(getContext()).getListContent(list_id);
+        liste = (ListView) v.findViewById(R.id.list_content_list);
+        ArrayAdapter<Product> adapter = new ProductListAdapter(getActivity(), R.layout.element_list_product_layout, list);
         liste.setAdapter(adapter);
         fabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NewArticleFragment newArticleFragment = NewArticleFragment.newInstance(list_id,list_name);
+                NewArticleFragment newArticleFragment = NewArticleFragment.newInstance(list_id, list_name);
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction()
                         .replace(R.id.content_main, newArticleFragment)

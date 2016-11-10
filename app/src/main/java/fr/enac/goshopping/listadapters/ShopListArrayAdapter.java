@@ -38,7 +38,8 @@ public class ShopListArrayAdapter extends ArrayAdapter<Shop> {
 
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) context
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE); view = inflater.inflate(resource, parent, false);
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            view = inflater.inflate(resource, parent, false);
         }
 
         TextView shopName = (TextView) view.findViewById(R.id.shopName);

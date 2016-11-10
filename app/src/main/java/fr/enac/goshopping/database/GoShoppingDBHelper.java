@@ -26,8 +26,8 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
 
     private Context myContext;
 
-    public GoShoppingDBHelper(Context context){
-        super(context,DATABASE_NAME,null,DATABASE_VERSION);
+    public GoShoppingDBHelper(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
 
     }
 
-    public ArrayList<Shop> getShops(){
+    public ArrayList<Shop> getShops() {
         ArrayList<Shop> toReturn = new ArrayList<Shop>();
         SQLiteDatabase db = getReadableDatabase();
         String[] projection = {
@@ -113,16 +113,16 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
                 sortOrder                                 // The sort order
         );
         Shop toAdd;
-        if(c.moveToFirst()){
-            do{
-                toAdd = new Shop(c.getString(0),c.getString(1),c.getString(2),c.getString(3),c.getString(4));
+        if (c.moveToFirst()) {
+            do {
+                toAdd = new Shop(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4));
                 toReturn.add(toAdd);
-            }while (c.moveToNext());
+            } while (c.moveToNext());
         }
         return toReturn;
     }
 
-    public void addShop(Shop shop){
+    public long addShop(Shop shop) {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
         //Conteneur d'un tuple à insérer
@@ -137,15 +137,15 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
         values.put(GoShoppingDBContract.ShopTable.COLUMN_NAME_SHOP_LONG, shop.getLongitude());
 
         //On insère le tuple
-        sqLiteDatabase.insert(GoShoppingDBContract.ShopTable.TABLE_NAME,null,values);
+        return sqLiteDatabase.insert(GoShoppingDBContract.ShopTable.TABLE_NAME, null, values);
     }
 
-    public int deleteShop(Shop shop){
+    public int deleteShop(Shop shop) {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
-        return sqLiteDatabase.delete("shops","shop=?",new String[]{shop.getName()});
+        return sqLiteDatabase.delete("shops", "shop=?", new String[]{shop.getName()});
     }
 
-    public ArrayList<ShoppingListObject> getShoppingLists(){
+    public ArrayList<ShoppingListObject> getShoppingLists() {
         ArrayList<ShoppingListObject> toReturn = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
         String[] projection = {
@@ -165,17 +165,17 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
         );
         ShoppingListObject toAdd;
 
-        if(c.moveToFirst()){
-            do{
+        if (c.moveToFirst()) {
+            do {
                 System.out.println("Sorti de la DB " + c.getString(0));
-                toAdd = new ShoppingListObject(c.getString(0),c.getString(1),"magasin");
+                toAdd = new ShoppingListObject(c.getString(0), c.getString(1), "magasin");
                 toReturn.add(toAdd);
-            }while (c.moveToNext());
+            } while (c.moveToNext());
         }
         return toReturn;
     }
 
-    public long addShoppingList(ShoppingListObject list){
+    public long addShoppingList(ShoppingListObject list) {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
         //Conteneur d'un tuple à insérer
@@ -187,24 +187,24 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
         //values.put(GoShoppingDBContract.ShoppingList.COLUMN_NAME_SHOP_CITY, shop.getCity());
 
         //On insère le tuple
-        long toReturn = sqLiteDatabase.insert(GoShoppingDBContract.ShoppingList.TABLE_NAME,null,values);
+        long toReturn = sqLiteDatabase.insert(GoShoppingDBContract.ShoppingList.TABLE_NAME, null, values);
         System.out.println("Output de la DB su la création d'une shopping list : " + toReturn);
         return toReturn;
     }
 
-    public int deleteShoppingList(ShoppingListObject shopList){
+    public int deleteShoppingList(ShoppingListObject shopList) {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
-        return sqLiteDatabase.delete("shoppingLists","ListName=?",new String[]{shopList.getList_name()});
+        return sqLiteDatabase.delete("shoppingLists", "ListName=?", new String[]{shopList.getList_name()});
     }
 
-    public ArrayList<Product> getArticles(){
+    public ArrayList<Product> getArticles() {
         ArrayList<Product> toReturn = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
         String[] projection = {
                 GoShoppingDBContract.ArticleTable._ID,
                 GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_NAME,
                 GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_SHELF,
-               // GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_QTY
+                // GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_QTY
         };
         String sortOrder = GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_NAME + " ASC";
         Cursor c = db.query(
@@ -217,19 +217,19 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
                 sortOrder                                 // The sort order
         );
         Product toAdd;
-        if(c.moveToFirst()){
-            do{
-                toAdd = new Product(null,c.getString(0),c.getString(1),"1");
+        if (c.moveToFirst()) {
+            do {
+                toAdd = new Product(null, c.getString(0), c.getString(1), "1");
                 toReturn.add(toAdd);
-            }while (c.moveToNext());
+            } while (c.moveToNext());
         }
         return toReturn;
     }
 
-    public ArrayList<Product> getArticles(String list_id){
+    public ArrayList<Product> getArticles(String list_id) {
         ArrayList<Product> toReturn = new ArrayList<>();
         System.out.println("Gestion de la base de donnée : valeur recu par getArticle " + list_id);
-        String[] whereArgs= new String[]{list_id};
+        String[] whereArgs = new String[]{list_id};
         SQLiteDatabase db = getReadableDatabase();
         String[] projection = {
                 GoShoppingDBContract.ShoppingListContent.COLUMN_NAME_LIST_ID,
@@ -247,16 +247,38 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
                 sortOrder                                 // The sort order
         );
         Product toAdd;
-        if(c.moveToFirst()){
-            do{
-                toAdd = new Product(c.getString(0),c.getString(1),"test",c.getString(2));
+        if (c.moveToFirst()) {
+            do {
+                toAdd = new Product(c.getString(0), c.getString(1), "", c.getString(2));
                 toReturn.add(toAdd);
-            }while (c.moveToNext());
+            } while (c.moveToNext());
         }
         return toReturn;
     }
 
-    public long addArticle(Product prod){
+    public ArrayList<Product> getListContent(String listId) {
+        ArrayList<Product> toReturn = new ArrayList<>();
+        String[] projection = {
+                GoShoppingDBContract.ArticleTable._ID,
+                GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_NAME,
+                GoShoppingDBContract.ShoppingListContent.COLUMN_NAME_QUANTITY
+        };
+        String myQuery = "SELECT " + GoShoppingDBContract.ArticleTable._ID + "," + GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_NAME +
+                "," + GoShoppingDBContract.ShoppingListContent.COLUMN_NAME_QUANTITY + " FROM " + GoShoppingDBContract.ShoppingListContent.TABLE_NAME + ", " +
+                GoShoppingDBContract.ArticleTable.TABLE_NAME + " WHERE " + GoShoppingDBContract.ShoppingListContent.COLUMN_NAME_PRODUCT_ID + " = " +
+                GoShoppingDBContract.ArticleTable._ID + " AND " + GoShoppingDBContract.ShoppingListContent.COLUMN_NAME_LIST_ID + " = " + listId;
+        Cursor c = getReadableDatabase().rawQuery(myQuery, null);
+        Product toAdd;
+        if (c.moveToFirst()) {
+            do {
+                toAdd = new Product(c.getString(0), c.getString(1), "", c.getString(2));
+                toReturn.add(toAdd);
+            } while (c.moveToNext());
+        }
+        return toReturn;
+    }
+
+    public long addArticle(Product prod) {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
         //Conteneur d'un tuple à insérer
@@ -269,15 +291,15 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
 
 
         //On insère le tuple
-        return sqLiteDatabase.insert(GoShoppingDBContract.ArticleTable.TABLE_NAME,null,values);
+        return sqLiteDatabase.insert(GoShoppingDBContract.ArticleTable.TABLE_NAME, null, values);
     }
 
-    public int deleteArticle(Product prod){
+    public int deleteArticle(Product prod) {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
-        return sqLiteDatabase.delete("articles","Article=?",new String[]{prod.getName()});
+        return sqLiteDatabase.delete("articles", "Article=?", new String[]{prod.getName()});
     }
 
-    public void addArticleToList(String listId, Product article){
+    public void addArticleToList(String listId, Product article) {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -286,11 +308,8 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
         values.put(GoShoppingDBContract.ShoppingListContent.COLUMN_NAME_PRODUCT_ID, article.get_id());
         values.put(GoShoppingDBContract.ShoppingListContent.COLUMN_NAME_QUANTITY, article.getQuantity());
 
-        sqLiteDatabase.insert(GoShoppingDBContract.ShoppingListContent.TABLE_NAME,null,values);
+        sqLiteDatabase.insert(GoShoppingDBContract.ShoppingListContent.TABLE_NAME, null, values);
     }
-
-
-
 
 
 }

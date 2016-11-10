@@ -81,22 +81,22 @@ public class NewListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v= inflater.inflate(R.layout.fragment_new_list, container, false);
+        View v = inflater.inflate(R.layout.fragment_new_list, container, false);
         name = (EditText) v.findViewById(R.id.manage_list_name);
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.GONE);
-        saveButton=(Button)v.findViewById(R.id.buttonNewList);
+        saveButton = (Button) v.findViewById(R.id.buttonNewList);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!name.getText().toString().equals("")) {
+                if (!name.getText().toString().equals("")) {
                     ShoppingListObject list = new ShoppingListObject(null, name.getText().toString(), "aucun magasin associe");
                     long lastInsertedId = new GoShoppingDBHelper(getActivity()).addShoppingList(list);
-                    list.set_ID(""+lastInsertedId);
+                    list.set_ID("" + lastInsertedId);
                     FragmentManager fragmentManager = getActivity().getFragmentManager();
-                    ((Activity)getContext()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+                    ((Activity) getContext()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
                     fragmentManager.beginTransaction()
-                            .replace(R.id.content_main, new ShoppingListFragment().newInstance(listId,listName))
+                            .replace(R.id.content_main, new ShoppingListFragment().newInstance(listId, listName))
                             .commit();
                     Toast.makeText(getContext(), "Liste crée.", Toast.LENGTH_SHORT).show();
 

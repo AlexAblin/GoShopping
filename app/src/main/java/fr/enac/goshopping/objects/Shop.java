@@ -14,7 +14,7 @@ public class Shop {
     private double latitude;
     private double longitude;
 
-    public Shop(String _id, String name, String adress, String city, String postcode){
+    public Shop(String _id, String name, String adress, String city, String postcode) {
         this._id = _id;
         this.name = name;
         this.adress = adress;
@@ -22,13 +22,19 @@ public class Shop {
         this.postcode = postcode;
     }
 
-    public Shop(String _id, String name, String adress, String city, String postcode, double latitude, double longitude){
-        this(_id,name,adress,city,postcode);
+    public Shop(String _id, String name, String adress, String city, String postcode, double latitude, double longitude) {
+        this(_id, name, adress, city, postcode);
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
-    public String get_id() { return _id;}
+    public String get_id() {
+        return _id;
+    }
+
+    public void set_id(String _id) {
+        this._id = _id;
+    }
 
     public String getName() {
         return name;
@@ -78,7 +84,7 @@ public class Shop {
         this.longitude = longitude;
     }
 
-    public String toString(){
-        return "{" + this.name + "} (" + this.adress + " "+ this.city + " " + this.postcode + ")";
+    public String toString() {
+        return "{" + this.name + "} (" + this.adress + " " + this.city + " " + this.postcode + ")";
     }
 }

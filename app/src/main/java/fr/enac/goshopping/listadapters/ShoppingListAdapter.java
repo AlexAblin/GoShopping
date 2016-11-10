@@ -39,18 +39,19 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingListObject> {
         this.list = objects;
     }
 
-   // @NonNull
+    // @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
 
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) context
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE); view = inflater.inflate(resource, parent, false);
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            view = inflater.inflate(resource, parent, false);
         }
         //ArrayList<Product> listProduct = new GoShoppingDBHelper(context).getArticles();
         //ArrayAdapter adapter= new ProductListAdapter(context,R.layout.element_list_product_layout,listProduct);
-        ShoppingListObject listItem=list.get(position);
+        ShoppingListObject listItem = list.get(position);
         //Spinner p= (Spinner) view.findViewById(R.id.spinnerList);
         //p.setAdapter(adapter);
         /*p.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -65,7 +66,7 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingListObject> {
 
             }
         });*/
-        TextView t= (TextView)view.findViewById(R.id.NomListe);
+        TextView t = (TextView) view.findViewById(R.id.NomListe);
         t.setText(listItem.getList_name());
 
         /*Button b= (Button) view.findViewById(R.id.buttonAdd);

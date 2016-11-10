@@ -1,6 +1,7 @@
 package fr.enac.goshopping.fragment;
 
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
@@ -12,12 +13,14 @@ import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import fr.enac.goshopping.R;
@@ -88,7 +91,7 @@ public class NewShopFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final Geocoder geocoder = new Geocoder(getActivity());
-        View v = inflater.inflate(R.layout.fragment_new_shop, container, false);
+        final View v = inflater.inflate(R.layout.fragment_new_shop, container, false);
         title = (TextView) v.findViewById(R.id.manage_shop_title);
         name = (EditText) v.findViewById(R.id.manage_shop_name);
         address = (EditText) v.findViewById(R.id.manage_shop_address);
@@ -100,13 +103,19 @@ public class NewShopFragment extends Fragment {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                List<Address> addresses = null;
+                ArrayList<Address> addresses = null;
+                View toTest = getActivity().getCurrentFocus();
+                if (toTest != null) {
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
                 try {
-                    addresses = geocoder.getFromLocationName(name.getText() + " " + address.getText() + " " + postCode.getText() + " " + city.getText(), 3);
+                    addresses = (ArrayList<Address>) geocoder.getFromLocationName(name.getText() + " " + address.getText() + " " + postCode.getText() + " " + city.getText(), 5);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                if(!name.getText().toString().equals("") || addresses.size() == 0) {
+                if (!name.getText().toString().equals("") || addresses.size() == 0) {
+                    if (addresses.size() == 1) {
                         Address found_address = addresses.get(0);
                         Shop shop = new Shop(null, found_address.getFeatureName(), found_address.getAddressLine(1),
                                 found_address.getLocality(), found_address.getPostalCode(), found_address.getLatitude(), found_address.getLongitude());
@@ -116,29 +125,12 @@ public class NewShopFragment extends Fragment {
                                 .replace(R.id.content_main, new ShopFragment())
                                 .commit();
                         Toast.makeText(getContext(), "Magasin enregistré", Toast.LENGTH_SHORT).show();
-                        fab.setVisibility(View.VISIBLE);
-                    /*name.setSelected(false);
-                    address.setSelected(false);
-                    city.setSelected(false);
-                    postCode.setSelected(false);
-                    name.clearFocus();
-                    address.clearFocus();
-                    city.clearFocus();
-                    postCode.clearFocus();
-                    name.setFocusable(false);
-                    address.setFocusable(false);
-                    postCode.setFocusable(false);
-                    city.setFocusable(false);*/
+                    } else {
+                        ChooseShopDialogFragment chooseShopDialogFragment = ChooseShopDialogFragment.newInstance(addresses);
+                        chooseShopDialogFragment.show(getFragmentManager().beginTransaction(), "choose_shop");
+                    }
 
-                    //ChooseShopDialogFragment.
-
-                    /*ChooseShopDialogFragment chooseShopDialogFragment = new ChooseShopDialogFragment();
-                    chooseShopDialogFragment.setList(addresses);
-                    chooseShopDialogFragment.show(getFragmentManager(),"");*/
-                    //chooseShopDialogFragment.setShowsDialog(true);
-
-                    //chooseShopDialogFragment
-                    //chooseShopDialogFragment.show(getFragmentManager(),null);
+                    fab.setVisibility(View.VISIBLE);
                 } else {
                     Snackbar.make(view, "Nom de magasin incorrect", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();

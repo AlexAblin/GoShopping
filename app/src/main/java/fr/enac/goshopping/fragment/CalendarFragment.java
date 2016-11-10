@@ -77,7 +77,7 @@ public class CalendarFragment extends Fragment {
         // Inflate the layout for this fragment
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.VISIBLE);
-        View v= inflater.inflate(R.layout.fragment_calendar, container, false);
+        View v = inflater.inflate(R.layout.fragment_calendar, container, false);
         return v;
     }
 

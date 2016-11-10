@@ -12,7 +12,7 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:text="Gérer un magasin"
+            android:text="Ajouter un magasin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/manage_shop_title"

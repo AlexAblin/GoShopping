@@ -10,6 +10,9 @@ import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.SyncStateContract;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.view.View;
@@ -22,6 +25,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 
 import fr.enac.goshopping.database.GoShoppingDBHelper;
 import fr.enac.goshopping.fragment.CalendarFragment;
@@ -40,7 +47,7 @@ public class MainActivity extends AppCompatActivity
         CalendarFragment.OnFragmentInteractionListener, ShoppingListFragment.OnFragmentInteractionListener,
         ShopFragment.OnFragmentInteractionListener, NewShopFragment.OnFragmentInteractionListener,
         NewArticleFragment.OnFragmentInteractionListener, NewListFragment.OnFragmentInteractionListener,
-        RappelsFragment.OnFragmentInteractionListener, ShoppingListContent.OnFragmentInteractionListener{
+        RappelsFragment.OnFragmentInteractionListener, ShoppingListContent.OnFragmentInteractionListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private int MY_PERMISSIONS_REQUEST_FINE_LOCATION;
     private GoShoppingDBHelper dbHelper;
@@ -48,9 +55,19 @@ public class MainActivity extends AppCompatActivity
     private int state;
     private int MY_PERMISSIONS_REQUEST_COARSE_LOCATION;
 
+    GoogleApiClient mGoogleApiClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //betterLocationTest();
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
         dbHelper = new GoShoppingDBHelper(this);
         dbHelper.onCreate(dbHelper.getWritableDatabase());
         setContentView(R.layout.activity_main);
@@ -76,6 +93,18 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         //testLocation();
+    }
+
+    @Override
+    protected void onStart() {
+        mGoogleApiClient.connect();
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
     }
 
     @Override
@@ -125,9 +154,13 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fragmentManager = getFragmentManager();
         Fragment toCommit = null;
 
-        if (id == R.id.nav_go_shopping) {
+        fab.hide();
+        fab.show();
 
-        } else if (id == R.id.nav_calendar) {
+        /*if (id == R.id.nav_go_shopping) {
+
+        } else*/
+        if (id == R.id.nav_calendar) {
             state = id;
             toCommit = new CalendarFragment();
         } else if (id == R.id.nav_shopping_list) {
@@ -151,20 +184,20 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    public void handleFabButton(View view){
-        switch (state){
-            case R.id.nav_go_shopping:
-                break;
+    public void handleFabButton(View view) {
+        switch (state) {
+            /*case R.id.nav_go_shopping:
+                break;*/
             case R.id.nav_calendar:
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.content_main,new RappelsFragment())
+                        .replace(R.id.content_main, new RappelsFragment())
                         .addToBackStack(null)
                         .commit();
                 break;
             case R.id.nav_shopping_list:
                 //fab.setVisibility(View.INVISIBLE);
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.content_main,new NewListFragment())
+                        .replace(R.id.content_main, new NewListFragment())
                         .addToBackStack(null)
                         .commit();
                 break;
@@ -187,7 +220,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void testLocation() {
-        System.out.println("Début du test location");
         LocationManager locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
         Intent resultIntent = new Intent(this, LocationNotificationActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(
@@ -216,5 +248,50 @@ public class MainActivity extends AppCompatActivity
         Toast.makeText(this, "Demande de géolocalisation enregistré", Toast.LENGTH_LONG).show();
         locationManager.addProximityAlert(43.6043657, 1.4411526, 250, -1, pendingIntent);
         System.out.println("Fin du test location");
+    }
+
+    public void betterLocationTest() {
+        Toast.makeText(this, "Début test", Toast.LENGTH_SHORT).show();
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        Intent intent = new Intent(Constants.ACTION_PROXIMITY_ALERT);
+        PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, 0);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            //return;
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_FINE_LOCATION);
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_COARSE_LOCATION);
+        }
+        Toast.makeText(this, "Permissions OK", Toast.LENGTH_SHORT).show();
+        locationManager.addProximityAlert(43.6043657, 1.4411526, 500, -1, pendingIntent);
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    public GoogleApiClient getmGoogleApiClient() {
+        return mGoogleApiClient;
     }
 }

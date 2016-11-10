@@ -22,25 +22,26 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
     private List<Product> list;
 
     public ProductListAdapter(Context context, int resource, List<Product> objects) {
-        super(context, resource,R.id.ProductName, objects);
+        super(context, resource, R.id.ProductName, objects);
         this.context = context;
         this.resource = resource;
         this.list = objects;
 
     }
 
-   // @NonNull
+    // @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
 
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) context
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE); view = inflater.inflate(resource, parent, false);
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            view = inflater.inflate(resource, parent, false);
         }
         TextView productName = (TextView) view.findViewById(R.id.ProductName);
         TextView productCategory = (TextView) view.findViewById(R.id.ProductCategorie);
-        TextView productQuantity= (TextView) view.findViewById(R.id.ProductQuantity);
+        TextView productQuantity = (TextView) view.findViewById(R.id.ProductQuantity);
 
         Product prod = list.get(position);
         productName.setText(prod.getName());

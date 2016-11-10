@@ -70,10 +70,6 @@ public class ShoppingListFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-
-
-
     }
 
     @Override
@@ -82,7 +78,7 @@ public class ShoppingListFragment extends Fragment {
         // Inflate the layout for this fragment
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.VISIBLE);
-        View v= inflater.inflate(R.layout.fragment_shopping_list, container, false);
+        View v = inflater.inflate(R.layout.fragment_shopping_list, container, false);
         final ArrayList<ShoppingListObject> list = new GoShoppingDBHelper(getContext()).getShoppingLists();
         ListView listView = (ListView) v.findViewById(R.id.shopping_list_list);
         ArrayAdapter adapter = new ShoppingListAdapter(getActivity(), R.layout.element_list_shopping_layout, list);
@@ -92,7 +88,7 @@ public class ShoppingListFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ShoppingListObject selected = list.get(position);
                 System.out.println(selected.getList_name());
-                Fragment viewList = ShoppingListContent.newInstance(selected.get_ID(),selected.getList_name());
+                Fragment viewList = ShoppingListContent.newInstance(selected.get_ID(), selected.getList_name());
                 FragmentManager fragmentManager = getActivity().getFragmentManager();
                 fragmentManager.beginTransaction()
                         .replace(R.id.content_main, viewList)
