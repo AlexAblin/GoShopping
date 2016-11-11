@@ -51,6 +51,7 @@ class GoShoppingDBContract {
         static final String TABLE_NAME = "Articles";
         static final String COLUMN_NAME_ARTICLE_NAME = "Article";
         static final String COLUMN_NAME_ARTICLE_SHELF = "Shelf";
+
     }
 
     static class ShopTable implements BaseColumns {

@@ -9,12 +9,14 @@ public class Product {
     private String name;
     private String category;
     private String quantity;
+    private boolean checked;
 
     public Product(String _id, String name, String category, String quantity) {
         this._id = _id;
         this.name = name;
         this.category = category;
         this.quantity = quantity;
+        this.checked=false;
     }
 
     public String getName() {
@@ -48,4 +50,8 @@ public class Product {
     public void setQuantity(String quantity) {
         this.quantity = quantity;
     }
+
+    public boolean isChecked(){ return checked;}
+
+    public void setChecked(boolean checked) { this.checked = checked;}
 }

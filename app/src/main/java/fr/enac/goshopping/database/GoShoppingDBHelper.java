@@ -305,7 +305,10 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
 
     public int deleteArticle(Product prod) {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
-        return sqLiteDatabase.delete("articles", "Article=?", new String[]{prod.getName()});
+        sqLiteDatabase.delete("ShoppingListContent","Product_Id=?",new String[]{prod.get_id()});
+        sqLiteDatabase.delete("ShoppingListContent","Quantity=?",new String[]{prod.getQuantity()});
+        sqLiteDatabase.delete("articles", "Article=?", new String[]{prod.getName()});
+         return 0;
     }
 
     public void addArticleToList(String listId, Product article) {
@@ -318,6 +321,16 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
         values.put(GoShoppingDBContract.ShoppingListContent.COLUMN_NAME_QUANTITY, article.getQuantity());
 
         sqLiteDatabase.insert(GoShoppingDBContract.ShoppingListContent.TABLE_NAME, null, values);
+    }
+
+    public void updateArticle(String newName,String newQuantity){
+        SQLiteDatabase db = getReadableDatabase();
+        ContentValues argArticle = new ContentValues();
+        argArticle.put("Article",newName);
+        ContentValues argQuantity = new ContentValues();
+        argQuantity.put("Quantity",newQuantity);
+        db.update("Articles",argArticle,null,null);
+        db.update("ShoppingListContent",argQuantity,null,null);
     }
 
     public ArrayList<Reminder> getReminder(String list_id) {

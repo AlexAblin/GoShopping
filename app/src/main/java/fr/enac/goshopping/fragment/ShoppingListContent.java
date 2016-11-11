@@ -1,16 +1,28 @@
 package fr.enac.goshopping.fragment;
 
+import android.app.AlertDialog;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.design.widget.FloatingActionButton;
+import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -38,8 +50,12 @@ public class ShoppingListContent extends Fragment {
     private FloatingActionButton fabButton;
     private ListView liste;
     private TextView title;
+    private Fragment f= this;
+    private Product selectedArticle;
+    private int selectedPosition;
+    private MenuItem deleteMenuItem;
+    private MenuItem renameMenuItem;
 
-    // TODO: Rename and change types of parameters
     private String list_id;
     private String list_name;
 
@@ -70,6 +86,7 @@ public class ShoppingListContent extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         if (getArguments() != null) {
             list_id = getArguments().getString(ARG_PARAM1);
             list_name = getArguments().getString(ARG_PARAM2);
@@ -84,7 +101,7 @@ public class ShoppingListContent extends Fragment {
         title.setText(list_name);
         liste = (ListView) v.findViewById(R.id.list_content_list);
         fabButton = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        final ArrayList list = new GoShoppingDBHelper(getContext()).getListContent(list_id);
+        final ArrayList<Product> list = new GoShoppingDBHelper(getContext()).getListContent(list_id);
         liste = (ListView) v.findViewById(R.id.list_content_list);
         ArrayAdapter<Product> adapter = new ProductListAdapter(getActivity(), R.layout.element_list_product_layout, list);
         liste.setAdapter(adapter);
@@ -100,6 +117,36 @@ public class ShoppingListContent extends Fragment {
             }
         });
 
+        liste.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (!list.get(position).isChecked()){
+                    TextView prodName = (TextView) view.findViewById(R.id.ProductName);
+                    TextView quantity = (TextView) view.findViewById(R.id.ProductQuantity);
+                    prodName.setPaintFlags(prodName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                    quantity.setPaintFlags(quantity.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                    list.get(position).setChecked(true);
+                } else {
+                    TextView prodName = (TextView) view.findViewById(R.id.ProductName);
+                    TextView quantity = (TextView) view.findViewById(R.id.ProductQuantity);
+                    prodName.setPaintFlags(0);
+                    quantity.setPaintFlags(0);
+                    list.get(position).setChecked(false);
+                }
+            }
+        });
+
+        liste.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                selectedArticle=list.get(position);
+                selectedPosition= position;
+                liste.getChildAt(position).setBackgroundColor(Color.GRAY);
+                deleteMenuItem.setVisible(true);
+                renameMenuItem.setVisible(true);
+                return true;
+            }
+        });
 
         return v;
     }
@@ -128,6 +175,87 @@ public class ShoppingListContent extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // TODO Add your menu entries here
+        inflater.inflate(R.menu.manage_article, menu);
+        deleteMenuItem = menu.findItem(R.id.DeleteArticle);
+        deleteMenuItem.setVisible(false);
+        renameMenuItem= menu.findItem(R.id.RenameArticle);
+        renameMenuItem.setVisible(false);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.DeleteArticle) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(
+                    getActivity());
+            alert.setTitle("Voulez-vous supprimer l'article "+ selectedArticle.getName()+" ?");
+            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    new GoShoppingDBHelper(getContext()).deleteArticle(selectedArticle);
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.detach(f).attach(f).commit();
+                }
+            });
+            alert.setNegativeButton("Annuler",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alertDialog = alert.create();
+            alertDialog.show();
+
+        }
+        if (id== R.id.RenameArticle){
+            LinearLayout layout = new LinearLayout(getContext());
+            AlertDialog.Builder alert = new AlertDialog.Builder(
+                    getActivity());
+            alert.setTitle("Renommer");
+
+            final EditText inputName = new EditText(getActivity());
+            inputName.setHint("nom");
+            layout.addView(inputName);
+
+            final EditText inputQuant = new EditText(getActivity());
+            inputQuant.setHint("quantite");
+            inputQuant.setInputType(InputType.TYPE_CLASS_NUMBER);
+            layout.addView(inputQuant);
+            alert.setView(layout);
+
+            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    if(inputName.getText().toString().equals("") && inputQuant.getText().toString().equals("")){
+                        dialog.cancel();
+                    } else {
+                        String name = inputName.getEditableText().toString();
+                        String quantity = inputQuant.getEditableText().toString();
+                        new GoShoppingDBHelper(getContext()).updateArticle(name, quantity);
+                        FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        ft.detach(f).attach(f).commit();
+                    }
+                }
+            });
+
+            alert.setNegativeButton("Annuler",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alertDialog = alert.create();
+            alertDialog.show();
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -146,11 +274,9 @@ public class ShoppingListContent extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
         if(getView() == null){
             return;
         }
-
         getView().setFocusableInTouchMode(true);
         getView().requestFocus();
         getView().setOnKeyListener(new View.OnKeyListener() {

@@ -1,5 +1,7 @@
 package fr.enac.goshopping.objects;
 
+import java.util.ArrayList;
+
 /**
  * Created by Geekette on 05/11/2016.
  */
@@ -9,6 +11,7 @@ public class ShoppingListObject {
     private String _ID;
     private String list_name;
     private String shop;
+    private ArrayList<Shop> linkedShop;
 
     public ShoppingListObject(String _ID, String list_name, String shop) {
         this._ID = _ID;
@@ -39,4 +42,6 @@ public class ShoppingListObject {
     public void setList_name(String list_name) {
         this.list_name = list_name;
     }
+
+    public ArrayList<Shop> getLinkedShop() { return linkedShop; }
 }

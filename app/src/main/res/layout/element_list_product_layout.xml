@@ -9,31 +9,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/checkBox" />
-
         <TextView
             android:text="TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/ProductName" />
-
-        <TextView
-            android:text="TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/ProductCategorie"
-            android:layout_weight="1" />
+            android:layout_weight="0.60"
+            android:id="@+id/ProductName"
+            android:textAppearance="@android:style/TextAppearance.Material.Large" />
 
         <TextView
             android:text="TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/ProductQuantity"
-            android:layout_weight="0.45" />
+            android:layout_weight="0.45"
+            android:textAppearance="@android:style/TextAppearance.Material.Large" />
 
     </LinearLayout>
 

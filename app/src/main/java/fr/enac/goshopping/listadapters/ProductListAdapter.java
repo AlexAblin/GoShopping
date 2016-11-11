@@ -40,12 +40,10 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
             view = inflater.inflate(resource, parent, false);
         }
         TextView productName = (TextView) view.findViewById(R.id.ProductName);
-        TextView productCategory = (TextView) view.findViewById(R.id.ProductCategorie);
         TextView productQuantity = (TextView) view.findViewById(R.id.ProductQuantity);
 
         Product prod = list.get(position);
         productName.setText(prod.getName());
-        productCategory.setText(prod.getCategory());
         productQuantity.setText(String.valueOf(prod.getQuantity()));
         return view;
     }
@@ -55,6 +53,5 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
                                 ViewGroup parent) {
         return getView(position, convertView, parent);
     }
-
 
 }
