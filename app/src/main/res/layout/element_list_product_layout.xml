@@ -15,15 +15,16 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.60"
             android:id="@+id/ProductName"
-            android:textAppearance="@android:style/TextAppearance.Material.Large" />
+            android:textAppearance="@android:style/TextAppearance.Material.Large"
+            android:textAlignment="viewStart" />
 
         <TextView
             android:text="TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/ProductQuantity"
-            android:layout_weight="0.45"
-            android:textAppearance="@android:style/TextAppearance.Material.Large" />
+            android:textAppearance="@android:style/TextAppearance.Material.Large"
+            android:textAlignment="textEnd" />
 
     </LinearLayout>
 

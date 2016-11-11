@@ -115,7 +115,7 @@ public class NewShopFragment extends Fragment {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                if (!name.getText().toString().equals("") || addresses.size() != 0) {
+                if (!name.getText().toString().equals("") || addresses.size() != 0 || !((Integer) addresses.size()).equals(null)) {
                     if (addresses.size() == 1) {
                         Address found_address = addresses.get(0);
                         Shop shop = new Shop(null, found_address.getFeatureName(), found_address.getAddressLine(1),

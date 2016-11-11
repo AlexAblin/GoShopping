@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity
             state = id;
             toCommit = new ShoppingListFragment();
         } else if (id == R.id.nav_shop) {
-            thirdLocationTest();
+            //thirdLocationTest();
             state = id;
             toCommit = new ShopFragment();
         } else if (id == R.id.nav_settings) {

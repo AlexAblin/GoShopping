@@ -213,16 +213,17 @@ public class ShoppingListContent extends Fragment {
         }
         if (id== R.id.RenameArticle){
             LinearLayout layout = new LinearLayout(getContext());
+            layout.setOrientation(LinearLayout.VERTICAL);
             AlertDialog.Builder alert = new AlertDialog.Builder(
                     getActivity());
-            alert.setTitle("Renommer");
+            alert.setTitle("Modifier l'article");
 
             final EditText inputName = new EditText(getActivity());
-            inputName.setHint("nom");
+            inputName.setHint("Nom");
             layout.addView(inputName);
 
             final EditText inputQuant = new EditText(getActivity());
-            inputQuant.setHint("quantite");
+            inputQuant.setHint("Quantité");
             inputQuant.setInputType(InputType.TYPE_CLASS_NUMBER);
             layout.addView(inputQuant);
             alert.setView(layout);
