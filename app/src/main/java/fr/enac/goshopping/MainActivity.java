@@ -273,7 +273,7 @@ public class MainActivity extends AppCompatActivity
                     MY_PERMISSIONS_REQUEST_COARSE_LOCATION);
         }
         Toast.makeText(this, "Permissions OK", Toast.LENGTH_SHORT).show();
-        locationManager.addProximityAlert(43.6043657, 1.4411526, 500, -1, pendingIntent);
+        locationManager.addProximityAlert(50.2522748,3.9192623, 500, -1, pendingIntent);
     }
 
     @Override
