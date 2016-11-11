@@ -28,6 +28,10 @@ public class GeofenceTransitionIntentService extends IntentService {
 
     private NotificationManager mNotificationManager;
 
+    public GeofenceTransitionIntentService(){
+        super("Geofence");
+    }
+
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      *

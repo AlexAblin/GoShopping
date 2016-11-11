@@ -31,11 +31,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".LocationBroadcastReceiver">
-            <intent-filter>
-                <action android:name="fr.enac.goshopping.Constants.ACTION_PROXIMITY_ALERT" />
-            </intent-filter>
-        </receiver>
+        <service android:name=".notification.GeofenceTransitionIntentService"/>
 
     </application>
 
