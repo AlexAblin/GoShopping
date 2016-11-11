@@ -79,6 +79,16 @@ public class CalendarFragment extends Fragment {
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.VISIBLE);
         View v = inflater.inflate(R.layout.fragment_calendar, container, false);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.content_main, new RappelsFragment())
+                        .addToBackStack("CallendarFrag")
+                        .commit();
+            }
+        });
         return v;
     }
 

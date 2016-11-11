@@ -28,7 +28,13 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
+
+import java.util.ArrayList;
 
 import fr.enac.goshopping.database.GoShoppingDBHelper;
 import fr.enac.goshopping.fragment.CalendarFragment;
@@ -40,6 +46,7 @@ import fr.enac.goshopping.fragment.SettingsFragment;
 import fr.enac.goshopping.fragment.ShopFragment;
 import fr.enac.goshopping.fragment.ShoppingListContent;
 import fr.enac.goshopping.fragment.ShoppingListFragment;
+import fr.enac.goshopping.notification.GeofenceTransitionIntentService;
 import fr.enac.goshopping.notification.LocationNotificationActivity;
 
 public class MainActivity extends AppCompatActivity
@@ -47,7 +54,8 @@ public class MainActivity extends AppCompatActivity
         CalendarFragment.OnFragmentInteractionListener, ShoppingListFragment.OnFragmentInteractionListener,
         ShopFragment.OnFragmentInteractionListener, NewShopFragment.OnFragmentInteractionListener,
         NewArticleFragment.OnFragmentInteractionListener, NewListFragment.OnFragmentInteractionListener,
-        RappelsFragment.OnFragmentInteractionListener, ShoppingListContent.OnFragmentInteractionListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+        RappelsFragment.OnFragmentInteractionListener, ShoppingListContent.OnFragmentInteractionListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, ResultCallback<Status> {
+
 
     private int MY_PERMISSIONS_REQUEST_FINE_LOCATION;
     private GoShoppingDBHelper dbHelper;
@@ -56,17 +64,20 @@ public class MainActivity extends AppCompatActivity
     private int MY_PERMISSIONS_REQUEST_COARSE_LOCATION;
 
     GoogleApiClient mGoogleApiClient;
+    ArrayList<Geofence> mGeofenceList;
+    PendingIntent mGeofencePendingIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //betterLocationTest();
+
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
                     .addApi(LocationServices.API)
                     .build();
+            onStart();
         }
         dbHelper = new GoShoppingDBHelper(this);
         dbHelper.onCreate(dbHelper.getWritableDatabase());
@@ -92,7 +103,7 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        //testLocation();
+
     }
 
     @Override
@@ -156,6 +167,12 @@ public class MainActivity extends AppCompatActivity
         Fragment toCommit = null;
 
         fab.hide();
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                handleFabButton(v);
+            }
+        });
         fab.show();
 
         /*if (id == R.id.nav_go_shopping) {
@@ -168,6 +185,7 @@ public class MainActivity extends AppCompatActivity
             state = id;
             toCommit = new ShoppingListFragment();
         } else if (id == R.id.nav_shop) {
+            thirdLocationTest();
             state = id;
             toCommit = new ShopFragment();
         } else if (id == R.id.nav_settings) {
@@ -274,7 +292,42 @@ public class MainActivity extends AppCompatActivity
                     MY_PERMISSIONS_REQUEST_COARSE_LOCATION);
         }
         Toast.makeText(this, "Permissions OK", Toast.LENGTH_SHORT).show();
-        locationManager.addProximityAlert(50.2522748,3.9192623, 500, -1, pendingIntent);
+        locationManager.addProximityAlert(43.6043657, 1.4411526, 500, -1, pendingIntent);
+    }
+
+    public void thirdLocationTest() {
+        mGeofenceList = new ArrayList<>();
+
+        mGeofenceList.add(new Geofence.Builder()
+                .setRequestId("testGeofence")
+                .setCircularRegion(
+                        43.6043657, 1.4411526,
+                        750
+                )
+                .setExpirationDuration(Geofence.NEVER_EXPIRE)
+                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
+                .build());
+        Toast.makeText(this, "Coucou", Toast.LENGTH_SHORT).show();
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                MY_PERMISSIONS_REQUEST_FINE_LOCATION);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            //+return;
+        }
+        LocationServices.GeofencingApi.addGeofences(
+                mGoogleApiClient,
+                getGeofencingRequest(),
+                getGeofencePendingIntent()
+        ).setResultCallback(this);
+        Toast.makeText(this, "Geofence créé", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -292,7 +345,31 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    private GeofencingRequest getGeofencingRequest(){
+        GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
+        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
+        builder.addGeofences(mGeofenceList);
+        return builder.build();
+    }
+
+    private PendingIntent getGeofencePendingIntent() {
+        // Reuse the PendingIntent if we already have it.
+        if (mGeofencePendingIntent != null) {
+            return mGeofencePendingIntent;
+        }
+        Intent intent = new Intent(this, GeofenceTransitionIntentService.class);
+        // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when
+        // calling addGeofences() and removeGeofences().
+        return PendingIntent.getService(this, 0, intent, PendingIntent.
+                FLAG_UPDATE_CURRENT);
+    }
+
     public GoogleApiClient getmGoogleApiClient() {
         return mGoogleApiClient;
+    }
+
+    @Override
+    public void onResult(@NonNull Status status) {
+
     }
 }

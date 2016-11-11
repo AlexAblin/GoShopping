@@ -111,11 +111,11 @@ public class NewShopFragment extends Fragment {
                     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 }
                 try {
-                    addresses = (ArrayList<Address>) geocoder.getFromLocationName(name.getText() + " " + address.getText() + " " + postCode.getText() + " " + city.getText(), 5);
+                    addresses = (ArrayList<Address>) geocoder.getFromLocationName(name.getText() + " " + address.getText() + " " + postCode.getText() + " " + city.getText(), 10);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                if (!name.getText().toString().equals("") || addresses.size() == 0) {
+                if (!name.getText().toString().equals("") || addresses.size() != 0) {
                     if (addresses.size() == 1) {
                         Address found_address = addresses.get(0);
                         Shop shop = new Shop(null, found_address.getFeatureName(), found_address.getAddressLine(1),
@@ -133,7 +133,7 @@ public class NewShopFragment extends Fragment {
 
                     fab.setVisibility(View.VISIBLE);
                 } else {
-                    Snackbar.make(view, "Nom de magasin incorrect", Snackbar.LENGTH_LONG)
+                    Snackbar.make(view, "Nom de magasin incorrect ou introuvable", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 }
             }

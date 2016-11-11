@@ -36,6 +36,7 @@
                 <action android:name="fr.enac.goshopping.Constants.ACTION_PROXIMITY_ALERT" />
             </intent-filter>
         </receiver>
+
     </application>
 
 </manifest>

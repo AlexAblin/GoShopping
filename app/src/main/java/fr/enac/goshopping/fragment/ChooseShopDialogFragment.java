@@ -57,7 +57,7 @@ public class ChooseShopDialogFragment extends DialogFragment {
         this.addresses = mapShops;
         for (Iterator<Address> it = mapShops.iterator(); it.hasNext(); ) {
             currentAddress = it.next();
-            current = currentAddress.getFeatureName() + " (" + currentAddress.getLocality() + ")";
+            current = currentAddress.getFeatureName() + " (" + currentAddress.getAddressLine(1) + ", "+ currentAddress.getLocality() + ")";
             toDisplay[i] = current;
             i++;
         }

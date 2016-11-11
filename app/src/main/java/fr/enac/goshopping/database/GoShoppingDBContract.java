@@ -39,7 +39,7 @@ class GoShoppingDBContract {
 
     static final String TABLE_REMINDER = "CREATE TABLE IF NOT EXISTS " + ReminderTable.TABLE_NAME + "(" + ReminderTable.COLUMN_NAME_REMINDER_LIST + INT_TYPE + COMMA_SEP +
             ReminderTable.COLUMN_NAME_REMINDER_DATE + " DATETIME" + COMMA_SEP + "CONSTRAINT fk_list_reminder FOREIGN KEY (" + ReminderTable.COLUMN_NAME_REMINDER_LIST + ")" +
-            " REFERENCES " + ShoppingList.TABLE_NAME + "(" + ShoppingList._ID + "))";
+            " REFERENCES " + ShoppingList.TABLE_NAME + "(" + ShoppingList._ID + ") ON DELETE CASCADE)";
 
     static class AppSettings {
         static final String TABLE_NAME = "Settings";
