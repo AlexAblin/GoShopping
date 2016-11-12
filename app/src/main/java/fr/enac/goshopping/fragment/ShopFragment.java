@@ -1,8 +1,11 @@
 package fr.enac.goshopping.fragment;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -44,6 +47,7 @@ public class ShopFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private FloatingActionButton fab;
+    private boolean activated=false;
 
     public ShopFragment() {
         // Required empty public constructor
@@ -81,6 +85,7 @@ public class ShopFragment extends Fragment {
                              Bundle savedInstanceState) {
         final Fragment f = this;
         View v = inflater.inflate(R.layout.fragment_shop, container, false);
+        //View v2 = inflater.inflate(R.layout.element_list_shop_layout, container, false);
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.VISIBLE);
         final ArrayList<Shop> list = new GoShoppingDBHelper(getContext()).getShops();
@@ -90,12 +95,16 @@ public class ShopFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                new GoShoppingDBHelper(getContext()).deleteShop(list.get(position));
+               /* new GoShoppingDBHelper(getContext()).deleteShop(list.get(position));
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.detach(f).attach(f).commit();
+                ft.detach(f).attach(f).commit();*/
+
 
             }
         });
+
+
+
 
         return v;
     }

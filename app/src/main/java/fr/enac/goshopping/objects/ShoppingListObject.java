@@ -11,7 +11,7 @@ public class ShoppingListObject {
     private String _ID;
     private String list_name;
     private String shop;
-    private ArrayList<Shop> linkedShop;
+
 
     public ShoppingListObject(String _ID, String list_name, String shop) {
         this._ID = _ID;
@@ -43,5 +43,4 @@ public class ShoppingListObject {
         this.list_name = list_name;
     }
 
-    public ArrayList<Shop> getLinkedShop() { return linkedShop; }
 }

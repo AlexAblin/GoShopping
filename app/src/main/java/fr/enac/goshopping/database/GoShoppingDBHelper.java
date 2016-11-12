@@ -142,9 +142,9 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
         return sqLiteDatabase.insert(GoShoppingDBContract.ShopTable.TABLE_NAME, null, values);
     }
 
-    public int deleteShop(Shop shop) {
+    public int deleteShop(String name) {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
-        return sqLiteDatabase.delete("shops", "shop=?", new String[]{shop.getName()});
+        return sqLiteDatabase.delete("shops", "shop=?", new String[]{name});
     }
 
     public ArrayList<ShoppingListObject> getShoppingLists() {

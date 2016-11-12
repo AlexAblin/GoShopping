@@ -32,7 +32,11 @@
         </activity>
 
         <service android:name=".notification.GeofenceTransitionIntentService"/>
-
+        <receiver android:name=".notification.MyBroacastReceiver"
+            android:enabled="true"
+            android:exported="true">
+        </receiver>
     </application>
+
 
 </manifest>

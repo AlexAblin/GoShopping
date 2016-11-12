@@ -1,5 +1,7 @@
 package fr.enac.goshopping.objects;
 
+import java.util.ArrayList;
+
 /**
  * Created by Geekette on 04/11/2016.
  */
@@ -13,6 +15,8 @@ public class Shop {
     private String postcode;
     private double latitude;
     private double longitude;
+    private boolean activated;
+    private ArrayList<ShoppingListObject> associatedList;
 
     public Shop(String _id, String name, String adress, String city, String postcode) {
         this._id = _id;
@@ -20,12 +24,14 @@ public class Shop {
         this.adress = adress;
         this.city = city;
         this.postcode = postcode;
+        this.activated= false;
     }
 
     public Shop(String _id, String name, String adress, String city, String postcode, double latitude, double longitude) {
         this(_id, name, adress, city, postcode);
         this.latitude = latitude;
         this.longitude = longitude;
+        this.activated=false;
     }
 
     public String get_id() {
@@ -87,4 +93,14 @@ public class Shop {
     public String toString() {
         return "{" + this.name + "} (" + this.adress + " " + this.city + " " + this.postcode + ")";
     }
+
+    public boolean isActivated() {
+        return activated;
+    }
+
+    public void setActivated(boolean activated) {
+        this.activated = activated;
+    }
+
+    public ArrayList<ShoppingListObject> getAssociatedList() { return associatedList; }
 }

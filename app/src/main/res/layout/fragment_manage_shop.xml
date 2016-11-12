@@ -1,0 +1,41 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="fr.enac.goshopping.fragment.ManageShopFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="1">
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/manage_link_shop_name"
+            android:textAppearance="@android:style/TextAppearance.Material.Large" />
+
+        <TextView
+            android:text="Associer ce magasin à des listes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/manage_shop_liste_title"
+            android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="192dp"
+            android:layout_weight="0.03"
+            android:id="@+id/manage_link_list" />
+
+        <Button
+            android:text="Supprimer le Magasin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/DeleteShop" />
+    </LinearLayout>
+</FrameLayout>

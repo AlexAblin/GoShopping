@@ -21,6 +21,8 @@ import java.util.List;
 
 import fr.enac.goshopping.R;
 import fr.enac.goshopping.database.GoShoppingDBHelper;
+import fr.enac.goshopping.fragment.ManageShopFragment;
+import fr.enac.goshopping.fragment.RappelsFragment;
 import fr.enac.goshopping.objects.Shop;
 
 /**
@@ -32,7 +34,7 @@ public class ShopListArrayAdapter extends ArrayAdapter<Shop> {
     private Context context;
     private int resource;
     private List<Shop> list;
-    private boolean activated;
+
 
     public ShopListArrayAdapter(Context context, int resource, List<Shop> objects) {
         super(context, resource, objects);
@@ -44,20 +46,30 @@ public class ShopListArrayAdapter extends ArrayAdapter<Shop> {
 
     @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         View view = convertView;
-        activated=false;
 
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(resource, parent, false);
         }
+
+        TextView shopName = (TextView) view.findViewById(R.id.shopName);
+        TextView shopAdress = (TextView) view.findViewById(R.id.shopAdress);
+        TextView shopCity = (TextView) view.findViewById(R.id.shopCity);
+
+        final Shop shop = list.get(position);
+        shopName.setText(shop.getName());
+        shopAdress.setText(shop.getAdress());
+        shopCity.setText(shop.getCity());
+
         final Button geoloc=(Button)view.findViewById(R.id.activate_shop);
+        geoloc.setTag(position);
         geoloc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                if (!activated) {
+                if (!shop.isActivated()) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(
                             (Activity) getContext());
                     alert.setTitle("Voulez-vous activer un rappel à proximité de ce magasin?");
@@ -65,7 +77,7 @@ public class ShopListArrayAdapter extends ArrayAdapter<Shop> {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             //TODO: activer la localisation
                             geoloc.setBackgroundResource(R.drawable.map_alarm_icon_selected);
-                            activated=true;
+                            shop.setActivated(true);
                         }
 
                     });
@@ -86,7 +98,7 @@ public class ShopListArrayAdapter extends ArrayAdapter<Shop> {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             //TODO: activer la localisation
                             geoloc.setBackgroundResource(R.drawable.map_alarm_icon);
-                            activated=false;
+                            shop.setActivated(false);
                         }
                     });
 
@@ -104,17 +116,20 @@ public class ShopListArrayAdapter extends ArrayAdapter<Shop> {
             }
         });
 
-        TextView shopName = (TextView) view.findViewById(R.id.shopName);
-        TextView shopAdress = (TextView) view.findViewById(R.id.shopAdress);
-        TextView shopCity = (TextView) view.findViewById(R.id.shopCity);
-
-        Shop shop = list.get(position);
-        shopName.setText(shop.getName());
-        shopAdress.setText(shop.getAdress());
-        shopCity.setText(shop.getCity());
+        final Button manageButton= (Button) view.findViewById(R.id.setting_shop);
+        manageButton.setTag(position);
+        manageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ManageShopFragment newManageShopFragment= new ManageShopFragment().newInstance(list.get(position).getName());
+                ((Activity)getContext()).getFragmentManager().beginTransaction()
+                        .replace(R.id.content_main, newManageShopFragment)
+                        .addToBackStack("ShopFrag")
+                        .commit();
+            }
+        });
 
         return view;
     }
-
 
 }

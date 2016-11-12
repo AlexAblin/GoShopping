@@ -46,6 +46,7 @@ import java.util.Date;
 
 import fr.enac.goshopping.database.GoShoppingDBHelper;
 import fr.enac.goshopping.fragment.CalendarFragment;
+import fr.enac.goshopping.fragment.ManageShopFragment;
 import fr.enac.goshopping.fragment.NewArticleFragment;
 import fr.enac.goshopping.fragment.NewListFragment;
 import fr.enac.goshopping.fragment.NewShopFragment;
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity
         NewArticleFragment.OnFragmentInteractionListener, NewListFragment.OnFragmentInteractionListener,
         RappelsFragment.OnFragmentInteractionListener, ShoppingListContent.OnFragmentInteractionListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, ResultCallback<Status>,
-        LocationListener {
+        LocationListener, ManageShopFragment.OnFragmentInteractionListener {
 
 
     private int MY_PERMISSIONS_REQUEST_FINE_LOCATION;

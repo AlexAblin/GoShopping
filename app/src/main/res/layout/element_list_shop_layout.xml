@@ -48,6 +48,6 @@
         android:layout_width="40dp"
         android:layout_height="match_parent"
         style="?android:attr/borderlessButtonStyle"
-        android:id="@+id/button4" />
+        android:id="@+id/setting_shop" />
 
 </LinearLayout>

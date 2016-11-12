@@ -1,53 +1,50 @@
 package fr.enac.goshopping.fragment;
 
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.support.design.widget.FloatingActionButton;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CalendarView;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.TextView;
 
-import java.text.DateFormatSymbols;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 import fr.enac.goshopping.R;
 import fr.enac.goshopping.database.GoShoppingDBHelper;
+import fr.enac.goshopping.listadapters.LinkedListAdapter;
+import fr.enac.goshopping.objects.Shop;
 import fr.enac.goshopping.objects.ShoppingListObject;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link CalendarFragment.OnFragmentInteractionListener} interface
+ * {@link ManageShopFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link CalendarFragment#newInstance} factory method to
+ * Use the {@link ManageShopFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CalendarFragment extends Fragment {
+public class ManageShopFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String shopName;
 
     private OnFragmentInteractionListener mListener;
-    private FloatingActionButton fab;
-    String curDate;
 
-    public CalendarFragment() {
+    public ManageShopFragment() {
         // Required empty public constructor
     }
 
@@ -55,16 +52,14 @@ public class CalendarFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CalendarFragment.
+     * @param shopName Parameter 1.
+     * @return A new instance of fragment ManageShopFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static CalendarFragment newInstance(String param1, String param2) {
-        CalendarFragment fragment = new CalendarFragment();
+    public static ManageShopFragment newInstance(String shopName) {
+        ManageShopFragment fragment = new ManageShopFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM1, shopName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -73,42 +68,44 @@ public class CalendarFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-        curDate = new SimpleDateFormat("dd/mm/yyyy").format(new Date());
+            shopName=getArguments().getString(ARG_PARAM1);
+           }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        View v=inflater.inflate(R.layout.fragment_manage_shop, container, false);
+        TextView t= (TextView) v.findViewById(R.id.manage_link_shop_name);
+        t.setText(shopName);
+        ListView listToLink = (ListView) v.findViewById(R.id.manage_link_list);
+        final ArrayList<ShoppingListObject> list = new GoShoppingDBHelper(getContext()).getShoppingLists();
+        ArrayList<String> listName = new ArrayList<>();
+        for (ShoppingListObject s : list) {
+            listName.add(s.getList_name());
+        }
+        ArrayAdapter adapter = new LinkedListAdapter(getActivity(), R.layout.element_list_linked_shop, listName);
+        listToLink.setAdapter(adapter);
 
-        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.setVisibility(View.VISIBLE);
-        View v = inflater.inflate(R.layout.fragment_calendar, container, false);
-
-        final CalendarView c= (CalendarView) v.findViewById(R.id.calendar_calendar);
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("dd/MMMM/yyyy");
-        curDate = df.format(cal.getTime());
-
-        c.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-
+        listToLink.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onSelectedDayChange(CalendarView view, int year, int month,
-                                            int dayOfMonth) {
-                String getmonth= new DateFormatSymbols().getMonths()[month];
-                curDate =String.valueOf(dayOfMonth)+"/"+getmonth+"/"+String.valueOf(year);
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CheckBox c= (CheckBox) view.findViewById(R.id.checkBox);
+                c.setChecked(!c.isChecked());
+
             }
         });
-        fab.setOnClickListener(new View.OnClickListener() {
+
+        final Button deleteShop= (Button)v.findViewById(R.id.DeleteShop);
+        deleteShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RappelsFragment newRappelsFragment= new RappelsFragment().newInstance(String.valueOf(curDate));
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.content_main, newRappelsFragment)
-                        .addToBackStack("CallendarFrag")
+                GoShoppingDBHelper db=new GoShoppingDBHelper(getContext());
+                db.deleteShop(shopName);
+                getActivity().getFragmentManager().beginTransaction()
+                        .replace(R.id.content_main, new ShopFragment())
+                        .addToBackStack("ShopFrag")
                         .commit();
             }
         });
@@ -161,7 +158,6 @@ public class CalendarFragment extends Fragment {
         if(getView() == null){
             return;
         }
-
         getView().setFocusableInTouchMode(true);
         getView().requestFocus();
         getView().setOnKeyListener(new View.OnKeyListener() {
@@ -169,7 +165,7 @@ public class CalendarFragment extends Fragment {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK){
                     // handle back button's click listener
-                    getFragmentManager().popBackStack("MainActivity", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    getFragmentManager().popBackStack("ShopFrag", FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     return true;
                 }
                 return false;

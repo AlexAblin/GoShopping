@@ -32,5 +32,4 @@ public class Reminder {
         this.list_name = list_name;
     }
 
-
 }

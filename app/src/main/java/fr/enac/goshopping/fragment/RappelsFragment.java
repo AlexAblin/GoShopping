@@ -1,10 +1,14 @@
 package fr.enac.goshopping.fragment;
 
+import android.app.AlarmManager;
 import android.app.FragmentManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -13,13 +17,19 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
+import fr.enac.goshopping.MainActivity;
 import fr.enac.goshopping.R;
 import fr.enac.goshopping.database.GoShoppingDBHelper;
+import fr.enac.goshopping.notification.MyBroacastReceiver;
 import fr.enac.goshopping.objects.ShoppingListObject;
+
+import static android.content.Context.ALARM_SERVICE;
 
 
 /**
@@ -37,8 +47,8 @@ public class RappelsFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String daySelected;
+
 
     private OnFragmentInteractionListener mListener;
     private FloatingActionButton fab;
@@ -51,16 +61,14 @@ public class RappelsFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param daySelected Parameter 1.
      * @return A new instance of fragment RappelsFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static RappelsFragment newInstance(String param1, String param2) {
+    public static RappelsFragment newInstance(String daySelected) {
         RappelsFragment fragment = new RappelsFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM1, daySelected);
         fragment.setArguments(args);
         return fragment;
     }
@@ -69,8 +77,7 @@ public class RappelsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            daySelected = getArguments().getString(ARG_PARAM1);
         }
     }
 
@@ -82,6 +89,8 @@ public class RappelsFragment extends Fragment {
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.GONE);
         final TimePicker t = (TimePicker) v.findViewById(R.id.timePicker);
+        final TextView tjour=(TextView) v.findViewById(R.id.Jour);
+        tjour.setText(daySelected);
         t.setVisibility(View.GONE);
         t.setIs24HourView(true);
         ListView calendar_list = (ListView) v.findViewById(R.id.manage_rappel_list);
@@ -97,11 +106,27 @@ public class RappelsFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 t.setVisibility(View.VISIBLE);
                 fab.setVisibility(View.VISIBLE);
+            }
+        });
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar cal = Calendar.getInstance();
+
+                cal.set(t.getHour(),t.getMinute(),00);
+                setAlarm(cal);
 
 
             }
         });
         return v;
+    }
+
+    private void setAlarm(Calendar targetCal)
+    {   Intent alarmIntent = new Intent(getActivity(), MyBroacastReceiver.class);
+        PendingIntent sender = PendingIntent.getBroadcast(getActivity(), 0, alarmIntent, 0);
+        AlarmManager alarmManager = (AlarmManager)getContext().getSystemService(ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, targetCal.getTimeInMillis(), sender);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
