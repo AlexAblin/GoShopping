@@ -1,6 +1,7 @@
 package fr.enac.goshopping.notification;
 
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -17,6 +18,7 @@ import com.google.android.gms.location.GeofencingEvent;
 import java.util.List;
 
 import fr.enac.goshopping.MainActivity;
+import fr.enac.goshopping.R;
 
 import static android.content.ContentValues.TAG;
 
@@ -28,7 +30,7 @@ public class GeofenceTransitionIntentService extends IntentService {
 
     private NotificationManager mNotificationManager;
 
-    public GeofenceTransitionIntentService(){
+    public GeofenceTransitionIntentService() {
         super("Geofence");
     }
 
@@ -44,8 +46,8 @@ public class GeofenceTransitionIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
-        Toast.makeText(this, "Geofence recu", Toast.LENGTH_SHORT).show();
-        System.out.println("Test geofence");
+        //Toast.makeText(this, "Geofence recu", Toast.LENGTH_SHORT).show();
+        //System.out.println("Test geofence");
         if (geofencingEvent.hasError()) {
             /*String errorMessage = getErrorString(this,
                     geofencingEvent.getErrorCode());
@@ -57,8 +59,8 @@ public class GeofenceTransitionIntentService extends IntentService {
         int geofenceTransition = geofencingEvent.getGeofenceTransition();
 
         // Test that the reported transition was of interest.
-        if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER ||
-                geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
+        if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER /*||
+                geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT*/) {
 
             // Get the geofences that were triggered. A single event can trigger
             // multiple geofences.
@@ -70,7 +72,6 @@ public class GeofenceTransitionIntentService extends IntentService {
                     geofenceTransition,
                     triggeringGeofences
             );
-
             // Send notification and log the transition details.
 
             sendNotification(geofenceTransitionDetails);
@@ -95,11 +96,12 @@ public class GeofenceTransitionIntentService extends IntentService {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setContentTitle("TestNotification")
+                        .setContentTitle("Go!Shopping")
                         .setStyle(new NotificationCompat.BigTextStyle()
-                                .bigText(msg))
-                        .setContentText(msg)
-                        .setSmallIcon(com.google.android.gms.R.drawable.cast_ic_notification_small_icon);
+                                .bigText("Vous êtes à proximité de l'un de vos magasins! N'oubliez rien, consultez votre liste de courses."))
+                        .setContentText("Vous êtes à proximité de l'un de vos magasins!")
+                        .setSmallIcon(R.drawable.shop_icon)
+                        .setDefaults(Notification.DEFAULT_ALL);
         mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(1, mBuilder.build());
     }

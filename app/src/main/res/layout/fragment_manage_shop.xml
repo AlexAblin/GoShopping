@@ -33,7 +33,7 @@
             android:id="@+id/manage_link_list" />
 
         <Button
-            android:text="Supprimer le Magasin"
+            android:text="Supprimer ce magasin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/DeleteShop" />

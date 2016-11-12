@@ -57,7 +57,7 @@ public class ChooseShopDialogFragment extends DialogFragment {
         this.addresses = mapShops;
         for (Iterator<Address> it = mapShops.iterator(); it.hasNext(); ) {
             currentAddress = it.next();
-            current = currentAddress.getFeatureName() + " (" + currentAddress.getAddressLine(1) + ", "+ currentAddress.getLocality() + ")";
+            current = currentAddress.getFeatureName() + " (" + currentAddress.getAddressLine(1) + ", " + currentAddress.getLocality() + ")";
             toDisplay[i] = current;
             i++;
         }
@@ -93,25 +93,9 @@ public class ChooseShopDialogFragment extends DialogFragment {
                                 .replace(R.id.content_main, new ShopFragment())
                                 .commit();
                         Toast.makeText(getContext(), "Magasin enregistré.", Toast.LENGTH_SHORT).show();
-
-                        Geofence geofence = new Geofence.Builder()
-                                .setRequestId(toAdd.get_id())
-                                .setCircularRegion(
-                                        shop.getLatitude(),
-                                        shop.getLongitude(),
-                                        500
-                                )
-                                .setExpirationDuration(1000000)
-                                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
-                                .build();
-
+                        ((MainActivity) getActivity()).createGeofenceAlert("" + id, shop.getLatitude(), shop.getLongitude());
                     }
                 });
         return builder.show();
-    }
-
-
-    public void creatGeoFence(long latitude, long longitude) {
-
     }
 }

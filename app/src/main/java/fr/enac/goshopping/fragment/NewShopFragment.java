@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.enac.goshopping.MainActivity;
 import fr.enac.goshopping.R;
 import fr.enac.goshopping.database.GoShoppingDBHelper;
 import fr.enac.goshopping.objects.Shop;
@@ -120,12 +121,13 @@ public class NewShopFragment extends Fragment {
                         Address found_address = addresses.get(0);
                         Shop shop = new Shop(null, found_address.getFeatureName(), found_address.getAddressLine(1),
                                 found_address.getLocality(), found_address.getPostalCode(), found_address.getLatitude(), found_address.getLongitude());
-                        new GoShoppingDBHelper(getActivity()).addShop(shop);
+                        double lastInserted = new GoShoppingDBHelper(getActivity()).addShop(shop);
                         FragmentManager fragmentManager = getActivity().getFragmentManager();
                         fragmentManager.beginTransaction()
                                 .replace(R.id.content_main, new ShopFragment())
                                 .commit();
                         Toast.makeText(getContext(), "Magasin enregistré", Toast.LENGTH_SHORT).show();
+                        ((MainActivity) getActivity()).createGeofenceAlert(""+lastInserted, shop.getLatitude(),shop.getLongitude());
                     } else {
                         ChooseShopDialogFragment chooseShopDialogFragment = ChooseShopDialogFragment.newInstance(addresses);
                         chooseShopDialogFragment.show(getFragmentManager().beginTransaction(), "choose_shop");

@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/Jour"
             android:text="Jour"
-            android:textAppearance="@android:style/TextAppearance.Material.Large" />
+            android:textAppearance="@android:style/TextAppearance.Material.Title" />
 
         <ListView
             android:layout_width="match_parent"

@@ -135,12 +135,6 @@ public class MainActivity extends AppCompatActivity
     protected void onStart() {
         mGoogleApiClient.connect();
         super.onStart();
-        /*createLocationRequest();
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
-                .addLocationRequest(mLocationRequest);
-        PendingResult<LocationSettingsResult> result =
-                LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient,
-                        builder.build());*/
     }
 
     @Override
@@ -272,23 +266,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         startLocationUpdates();
-        mGeofenceList.add(createGeofence("1", 50.6292496, 3.057256, 750));
-        geofencingRequest = getGeofencingRequest();
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        LocationServices.GeofencingApi.addGeofences(
-                mGoogleApiClient,
-                geofencingRequest,
-                getGeofencePendingIntent()
-        ).setResultCallback(this);
     }
 
     protected void startLocationUpdates() {
@@ -350,7 +327,7 @@ public class MainActivity extends AppCompatActivity
         //updateUI();
     }
 
-    public Geofence createGeofence(String id,double latitude, double longitude, int radius){
+    private Geofence createGeofence(String id,double latitude, double longitude, int radius){
         return new Geofence.Builder()
                 .setRequestId(id)
                 .setCircularRegion(
@@ -380,6 +357,26 @@ public class MainActivity extends AppCompatActivity
         // calling addGeofences() and removeGeofences().
         return PendingIntent.getService(this, 0, intent, PendingIntent.
                 FLAG_UPDATE_CURRENT);
+    }
+
+    public void createGeofenceAlert(String id, double latitude, double longtitude){
+        mGeofenceList.add(createGeofence(id, latitude, longtitude, 750));
+        geofencingRequest = getGeofencingRequest();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        LocationServices.GeofencingApi.addGeofences(
+                mGoogleApiClient,
+                geofencingRequest,
+                getGeofencePendingIntent()
+        ).setResultCallback(this);
     }
 
 }

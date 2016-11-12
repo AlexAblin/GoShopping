@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -23,10 +22,9 @@ import android.widget.TimePicker;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import fr.enac.goshopping.MainActivity;
 import fr.enac.goshopping.R;
 import fr.enac.goshopping.database.GoShoppingDBHelper;
-import fr.enac.goshopping.notification.MyBroacastReceiver;
+import fr.enac.goshopping.notification.MyBroacastIntentService;
 import fr.enac.goshopping.objects.ShoppingListObject;
 
 import static android.content.Context.ALARM_SERVICE;
@@ -48,7 +46,8 @@ public class RappelsFragment extends Fragment {
 
     // TODO: Rename and change types of parameters
     private String daySelected;
-
+    private AlarmManager alarmMgr;
+    private PendingIntent alarmIntent;
 
     private OnFragmentInteractionListener mListener;
     private FloatingActionButton fab;
@@ -113,7 +112,10 @@ public class RappelsFragment extends Fragment {
             public void onClick(View v) {
                 Calendar cal = Calendar.getInstance();
 
-                cal.set(t.getHour(),t.getMinute(),00);
+                //cal.set(t.getHour(),t.getMinute(),00);
+                cal.set(Calendar.HOUR_OF_DAY, t.getHour());
+                cal.set(Calendar.MINUTE, t.getMinute());
+
                 setAlarm(cal);
 
 
@@ -123,8 +125,8 @@ public class RappelsFragment extends Fragment {
     }
 
     private void setAlarm(Calendar targetCal)
-    {   Intent alarmIntent = new Intent(getActivity(), MyBroacastReceiver.class);
-        PendingIntent sender = PendingIntent.getBroadcast(getActivity(), 0, alarmIntent, 0);
+    {   Intent alarmIntent = new Intent(getActivity(), MyBroacastIntentService.class);
+        PendingIntent sender = PendingIntent.getService(getActivity(), 0, alarmIntent, 0);
         AlarmManager alarmManager = (AlarmManager)getContext().getSystemService(ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, targetCal.getTimeInMillis(), sender);
     }

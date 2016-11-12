@@ -98,8 +98,6 @@ public class ShopFragment extends Fragment {
                /* new GoShoppingDBHelper(getContext()).deleteShop(list.get(position));
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.detach(f).attach(f).commit();*/
-
-
             }
         });
 
