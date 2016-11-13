@@ -43,7 +43,6 @@ import fr.enac.goshopping.fragment.product.NewArticleFragment;
 import fr.enac.goshopping.fragment.shoppinglist.NewListFragment;
 import fr.enac.goshopping.fragment.shop.NewShopFragment;
 import fr.enac.goshopping.fragment.calendar.RappelsFragment;
-import fr.enac.goshopping.fragment.SettingsFragment;
 import fr.enac.goshopping.fragment.shop.ShopFragment;
 import fr.enac.goshopping.fragment.shoppinglist.ShoppingListContent;
 import fr.enac.goshopping.fragment.shoppinglist.ShoppingListFragment;
@@ -51,12 +50,12 @@ import fr.enac.goshopping.notification.GeofenceTransitionIntentService;
 //import fr.enac.goshopping.notification.LocationNotificationActivity;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, SettingsFragment.OnFragmentInteractionListener,
-        CalendarFragment.OnFragmentInteractionListener, ShoppingListFragment.OnFragmentInteractionListener,
-        ShopFragment.OnFragmentInteractionListener, NewShopFragment.OnFragmentInteractionListener,
-        NewArticleFragment.OnFragmentInteractionListener, NewListFragment.OnFragmentInteractionListener,
-        RappelsFragment.OnFragmentInteractionListener, ShoppingListContent.OnFragmentInteractionListener,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, ResultCallback<Status>,
+        implements NavigationView.OnNavigationItemSelectedListener,CalendarFragment.OnFragmentInteractionListener,
+        ShoppingListFragment.OnFragmentInteractionListener,ShopFragment.OnFragmentInteractionListener,
+        NewShopFragment.OnFragmentInteractionListener, NewArticleFragment.OnFragmentInteractionListener,
+        NewListFragment.OnFragmentInteractionListener, RappelsFragment.OnFragmentInteractionListener,
+        ShoppingListContent.OnFragmentInteractionListener, GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener, ResultCallback<Status>,
         LocationListener, ManageShopFragment.OnFragmentInteractionListener {
 
 
@@ -75,6 +74,11 @@ public class MainActivity extends AppCompatActivity
     private String mLastUpdateTime;
     private GeofencingRequest geofencingRequest;
 
+    /**
+     * Creer l'activite
+     * Présentation
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -156,6 +160,9 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
+    //gestion du navigation en fonction de l'option selectionne
+    //l'utilisateur est redirige vers le fragment correspondant
+    //transition d'ecran
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
@@ -172,9 +179,6 @@ public class MainActivity extends AppCompatActivity
         });
         fab.show();
 
-        /*if (id == R.id.nav_go_shopping) {
-
-        } else*/
         if (id == R.id.nav_calendar) {
             state = id;
             toCommit = new CalendarFragment();
@@ -182,14 +186,9 @@ public class MainActivity extends AppCompatActivity
             state = id;
             toCommit = new ShoppingListFragment();
         } else if (id == R.id.nav_shop) {
-            //thirdLocationTest();
             state = id;
             toCommit = new ShopFragment();
-        } else if (id == R.id.nav_settings) {
-            state = id;
-            toCommit = new SettingsFragment();
         }
-
         fragmentManager.beginTransaction()
                 .replace(R.id.content_main, toCommit)
                 .addToBackStack("MainActivity")
@@ -200,34 +199,30 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    // gestion du floating button dans les different fragment de l'application
+    //transition d'ecran
     public void handleFabButton(View view) {
         switch (state) {
-            /*case R.id.nav_go_shopping:
-                break;*/
-            case R.id.nav_calendar:
+             case R.id.nav_calendar:
                 getFragmentManager().beginTransaction()
                         .replace(R.id.content_main, new RappelsFragment())
                         .addToBackStack("CallendarFrag")
                         .commit();
                 break;
             case R.id.nav_shopping_list:
-                //fab.setVisibility(View.INVISIBLE);
                 getFragmentManager().beginTransaction()
                         .replace(R.id.content_main, new NewListFragment())
                         .addToBackStack("ListFrag")
                         .commit();
                 break;
             case R.id.nav_shop:
-                //fab.setVisibility(View.INVISIBLE);
                 getFragmentManager().beginTransaction()
                         .addToBackStack(null)
                         .replace(R.id.content_main, new NewShopFragment())
                         .addToBackStack("ShopFrag")
                         .commit();
                 break;
-            case R.id.nav_settings:
-                break;
-        }
+            }
     }
 
     @Override

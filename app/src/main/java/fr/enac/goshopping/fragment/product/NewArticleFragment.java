@@ -88,19 +88,24 @@ public class NewArticleFragment extends Fragment {
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.GONE);
         saveButton = (Button) v.findViewById(R.id.buttonNewArticle);
+        //nregistrement du nouvel article
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!name.getText().toString().equals("")) {
                     GoShoppingDBHelper goShoppingDBHelper = new GoShoppingDBHelper(getActivity());
                     Product prod = new Product(null, name.getText().toString(), listName, quantity.getText().toString());
+                    //insertion dans la base de donnees
                     long lastInsertedId = goShoppingDBHelper.addArticle(prod);
                     prod.set_id("" + lastInsertedId);
                     goShoppingDBHelper.addArticleToList(listId, prod);
                     FragmentManager fragmentManager = getActivity().getFragmentManager();
+                    //on retourne au contenu de la liste avec l'article nouvelllement ajouté
+                    //transition d'ecran
                     fragmentManager.beginTransaction()
                             .replace(R.id.content_main, ShoppingListContent.newInstance(listId, listName))
                             .commit();
+                    //affichage en sortie d'une notification
                     Toast.makeText(getContext(), "Article enregistré.", Toast.LENGTH_SHORT).show();
                     fab.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -110,6 +115,8 @@ public class NewArticleFragment extends Fragment {
                     });
                     fab.setVisibility(View.VISIBLE);
                 } else {
+                    //si non d'article incorrect l'enregistrement n'est pas pris en compte
+                    //notification en sortie pour l'utilisateur
                     Snackbar.make(view, "Nom d'article incorrect", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 }

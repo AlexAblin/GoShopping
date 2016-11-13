@@ -94,10 +94,14 @@ public class ShoppingListFragment extends Fragment {
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.VISIBLE);
         View v = inflater.inflate(R.layout.fragment_shopping_list, container, false);
+        //recuperation des listes de courses dans la base de donnees
         list = new GoShoppingDBHelper(getContext()).getShoppingLists();
        final ListView listView = (ListView) v.findViewById(R.id.shopping_list_list);
+        //on creer l'adapteur pour la liste
         ArrayAdapter adapter = new ShoppingListAdapter(getActivity(), R.layout.element_list_shopping_layout, list);
         listView.setAdapter(adapter);
+        //si on clique sur une liste on en affiche son contenu
+        //transition d'ecran
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -111,11 +115,13 @@ public class ShoppingListFragment extends Fragment {
             }
         });
 
+        //si on maintien appuye sur une liste on affiche les poption de la supprimer ou la renommer
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 selectedList=list.get(position);
                 selectedPosition= position;
+                //affichage en sortie de la selection de l'element
                 listView.getChildAt(position).setBackgroundColor(Color.GRAY);
                 deleteMenuItem.setVisible(true);
                 renameListe.setVisible(true);
@@ -203,19 +209,25 @@ public class ShoppingListFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
+        //suppression d'une liste
         if (id == R.id.DeleteList) {
             AlertDialog.Builder alert = new AlertDialog.Builder(
                     getActivity());
+            //demande de confirmation de l'utilisateur
             alert.setTitle("Voulez-vous supprimer la liste "+ selectedList.getList_name()+" ?");
+            //on suprime la liste si confirme
             alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
+                    //mise a jour de la base de donnees
                     new GoShoppingDBHelper(getContext()).deleteShoppingList(selectedList);
+                    //on rafraichi le fragment
+                    //transition sur lui meme
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
                     ft.detach(f).attach(f).commit();
                 }
             });
 
+            //annulation de l'operation
             alert.setNegativeButton("Annuler",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
@@ -226,6 +238,8 @@ public class ShoppingListFragment extends Fragment {
             alertDialog.show();
 
         }
+        //renommer la liste
+        //une boite de dialog s'affiche ou l'utilisateur rentre le nom de la liste
         if (id== R.id.RenameList){
             AlertDialog.Builder alert = new AlertDialog.Builder(
                     getActivity());
@@ -237,12 +251,15 @@ public class ShoppingListFragment extends Fragment {
             alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     String srt1 = input.getEditableText().toString();
+                    //mise a jour de la base de donnee
                     new GoShoppingDBHelper(getContext()).updateShoppingListName(srt1);
+                    //on rafraichi le fragment
+                    //transition sur lui meme
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
                     ft.detach(f).attach(f).commit();
                 }
             });
-
+            //annulation de l'operation
             alert.setNegativeButton("Annuler",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {

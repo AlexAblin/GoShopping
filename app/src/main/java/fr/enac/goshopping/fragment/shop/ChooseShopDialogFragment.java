@@ -22,6 +22,9 @@ import fr.enac.goshopping.objects.Shop;
  * Created by Geekette on 08/11/2016.
  */
 
+/**
+ * Gestion de la liste de suggestion des magasins possibles obtenu par la géolocalisation
+ */
 public class ChooseShopDialogFragment extends DialogFragment {
 
     ArrayList<Address> addresses;
@@ -74,6 +77,7 @@ public class ChooseShopDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         System.out.println("Coucou");
+        //affichage de la fenetre de choix des magasins
         builder.setTitle("Choisissez votre magasin")
                 .setItems(toDisplay, new DialogInterface.OnClickListener() {
                     @Override
@@ -82,6 +86,8 @@ public class ChooseShopDialogFragment extends DialogFragment {
                         Shop toAdd = new Shop(null, shop.getFeatureName(), shop.getAddressLine(1), shop.getLocality(), shop.getPostalCode(), shop.getLatitude(), shop.getLongitude());
                         long id = new GoShoppingDBHelper(getActivity()).addShop(toAdd);
                         toAdd.set_id("" + id);
+                        //on retourne sur la liste des magasins avec le magasin crée
+                        //Transition d'écran
                         FragmentManager fragmentManager = getActivity().getFragmentManager();
                         fragmentManager.beginTransaction()
                                 .replace(R.id.content_main, new ShopFragment())

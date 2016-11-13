@@ -86,21 +86,30 @@ public class NewListFragment extends Fragment {
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.GONE);
         saveButton = (Button) v.findViewById(R.id.buttonNewList);
+        //sauvegarde d la liste cree
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //si le nom n'est pas vide
                 if (!name.getText().toString().equals("")) {
+                    //creation du la liste
                     ShoppingListObject list = new ShoppingListObject(null, name.getText().toString(), "aucun magasin associe");
+                    //mise a jour de la base de donnee
                     long lastInsertedId = new GoShoppingDBHelper(getActivity()).addShoppingList(list);
                     list.set_ID("" + lastInsertedId);
                     FragmentManager fragmentManager = getActivity().getFragmentManager();
                     ((Activity) getContext()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+                    //retour aux listes de courses avec la liste cree
+                    //transition d'ecran
                     fragmentManager.beginTransaction()
                             .replace(R.id.content_main, new ShoppingListFragment().newInstance(listId, listName))
                             .commit();
+                    //notification en sortie
                     Toast.makeText(getContext(), "Liste crée.", Toast.LENGTH_SHORT).show();
 
                 } else {
+                    //si le nom entre est vide, notification en sortie pour informer l'utilisateur
+                    //creation annulee
                     Snackbar.make(view, "Nom de liste incorrect", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 }

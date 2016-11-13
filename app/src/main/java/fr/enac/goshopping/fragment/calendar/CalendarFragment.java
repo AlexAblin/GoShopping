@@ -66,6 +66,11 @@ public class CalendarFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     * Fragment Creation
+     * Présentation
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,13 +85,13 @@ public class CalendarFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.VISIBLE);
         View v = inflater.inflate(R.layout.fragment_calendar, container, false);
 
         final ListView listView = (ListView) v.findViewById(R.id.calendar_day_list);
 
+        // création du calendrier
         final CalendarView c= (CalendarView) v.findViewById(R.id.calendar_calendar);
         final Calendar cal = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("dd/MMMM/yyyy");
@@ -97,6 +102,7 @@ public class CalendarFragment extends Fragment {
                 new GoShoppingDBHelper(getContext()).getShoppingListByDate(new Date(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH)))
                 ));
 
+        //Récupération du jour sélectionné
         c.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
 
             @Override
@@ -114,6 +120,9 @@ public class CalendarFragment extends Fragment {
                 ));
             }
         });
+
+        //Création de Rappel, changement d'écran
+        //Dialogue
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

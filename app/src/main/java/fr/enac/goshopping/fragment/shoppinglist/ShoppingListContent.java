@@ -106,6 +106,8 @@ public class ShoppingListContent extends Fragment {
         liste = (ListView) v.findViewById(R.id.list_content_list);
         ArrayAdapter<Product> adapter = new ProductListAdapter(getActivity(), R.layout.element_list_product_layout, list);
         liste.setAdapter(adapter);
+        //acces a l'ecran de creation d'un nouvel article
+        //transition d'ecran
         fabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,6 +120,7 @@ public class ShoppingListContent extends Fragment {
             }
         });
 
+        //permet a l'utilisateur de cocher et decocher les articles dans la liste
         liste.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -137,11 +140,13 @@ public class ShoppingListContent extends Fragment {
             }
         });
 
+        //permet d'afficher le menu pour renommer ou supprimer les articles si maintenu appuyé
         liste.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 selectedArticle=list.get(position);
                 selectedPosition= position;
+                //affichage en sortie de la selection de l'element
                 liste.getChildAt(position).setBackgroundColor(Color.GRAY);
                 deleteMenuItem.setVisible(true);
                 renameMenuItem.setVisible(true);
@@ -191,8 +196,9 @@ public class ShoppingListContent extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
+        //suppression de l'article
         if (id == R.id.DeleteArticle) {
+            //affichage d'une boite de dialog pour confirmer le choix de l'utilisateur
             AlertDialog.Builder alert = new AlertDialog.Builder(
                     getActivity());
             alert.setTitle("Voulez-vous supprimer l'article "+ selectedArticle.getName()+" ?");
@@ -213,7 +219,10 @@ public class ShoppingListContent extends Fragment {
             alertDialog.show();
 
         }
+        //renommer l'article
         if (id== R.id.RenameArticle){
+            //affichage d'une boite de dialog ou l'utilisateur entre le nouveau nom et la nouvelle
+            //quantite de l'article
             LinearLayout layout = new LinearLayout(getContext());
             layout.setOrientation(LinearLayout.VERTICAL);
             AlertDialog.Builder alert = new AlertDialog.Builder(
@@ -230,20 +239,26 @@ public class ShoppingListContent extends Fragment {
             layout.addView(inputQuant);
             alert.setView(layout);
 
+            //confirmation
             alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
-                    if(inputName.getText().toString().equals("") && inputQuant.getText().toString().equals("")){
+                    if(inputName.getText().toString().equals("") || inputQuant.getText().toString().equals("")){
+                        //si le nom ou la quantité est vide, on annule
                         dialog.cancel();
                     } else {
                         String name = inputName.getEditableText().toString();
                         String quantity = inputQuant.getEditableText().toString();
+                        //mise a jour de la base de donnee
                         new GoShoppingDBHelper(getContext()).updateArticle(name, quantity);
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        //on raffraichi le fragment pour afficher la mise a jour
+                        //transition vers lui même
                         ft.detach(f).attach(f).commit();
                     }
                 }
             });
 
+            //on annule l'operation
             alert.setNegativeButton("Annuler",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {

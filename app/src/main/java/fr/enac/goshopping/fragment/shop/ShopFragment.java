@@ -80,25 +80,14 @@ public class ShopFragment extends Fragment {
                              Bundle savedInstanceState) {
         final Fragment f = this;
         View v = inflater.inflate(R.layout.fragment_shop, container, false);
-        //View v2 = inflater.inflate(R.layout.element_list_shop_layout, container, false);
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.VISIBLE);
+        //recuperation des magasins dans la base de donnees
         final ArrayList<Shop> list = new GoShoppingDBHelper(getContext()).getShops();
         ListView listView = (ListView) v.findViewById(R.id.shopList);
+        //creation de l'adapter pour la liste de magasin
         ArrayAdapter adapter = new ShopListArrayAdapter(getActivity(), R.layout.element_list_shop_layout, list);
         listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-               /* new GoShoppingDBHelper(getContext()).deleteShop(list.get(position));
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.detach(f).attach(f).commit();*/
-            }
-        });
-
-
-
-
         return v;
     }
 

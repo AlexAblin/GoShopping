@@ -57,6 +57,7 @@ public class ShopListArrayAdapter extends ArrayAdapter<Shop> {
         shopAdress.setText(shop.getAdress());
         shopCity.setText(shop.getCity());
 
+        //activer la geolocalisation
         final Button geoloc=(Button)view.findViewById(R.id.activate_shop);
         geoloc.setTag(position);
         geoloc.setOnClickListener(new View.OnClickListener() {
@@ -65,6 +66,8 @@ public class ShopListArrayAdapter extends ArrayAdapter<Shop> {
                 if (!shop.isActivated()) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(
                             (Activity) getContext());
+                    //boite de dialog pour demander la confirmation
+                    //Entree/Sortie
                     alert.setTitle("Voulez-vous activer un rappel à proximité de ce magasin?");
                     alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
@@ -84,6 +87,9 @@ public class ShopListArrayAdapter extends ArrayAdapter<Shop> {
                     AlertDialog alertDialog = alert.create();
                     alertDialog.show();
                 } else {
+                    //desactiver la notfication
+                    //demande confimation de l'utilisateur
+                    //Entree/Sortie
                     AlertDialog.Builder alert = new AlertDialog.Builder(
                             (Activity) getContext());
                     alert.setTitle("Voulez-vous désactiver un rappel à proximité de ce magasin?");
@@ -95,6 +101,7 @@ public class ShopListArrayAdapter extends ArrayAdapter<Shop> {
                         }
                     });
 
+                    //annulation
                     alert.setNegativeButton("Annuler",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
@@ -109,6 +116,9 @@ public class ShopListArrayAdapter extends ArrayAdapter<Shop> {
             }
         });
 
+        //si l'utilisateur selectionne le bouton de parametre du magasin
+        //il est redirige vers ce fragment
+        //transition d'ecran
         final Button manageButton= (Button) view.findViewById(R.id.setting_shop);
         manageButton.setTag(position);
         manageButton.setOnClickListener(new View.OnClickListener() {

@@ -79,13 +79,16 @@ public class ManageShopFragment extends Fragment {
         t.setText(shopName);
         ListView listToLink = (ListView) v.findViewById(R.id.manage_link_list);
         final ArrayList<ShoppingListObject> list = new GoShoppingDBHelper(getContext()).getShoppingLists();
+        //recupération du nom des listes existantes
         ArrayList<String> listName = new ArrayList<>();
+
         for (ShoppingListObject s : list) {
             listName.add(s.getList_name());
         }
         ArrayAdapter adapter = new LinkedListAdapter(getActivity(), R.layout.element_list_linked_shop, listName);
         listToLink.setAdapter(adapter);
 
+        //gestion de la checkbox pour donner une sortie visuelle sur les action de l'utilisateur
         listToLink.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -95,12 +98,16 @@ public class ManageShopFragment extends Fragment {
             }
         });
 
+        //suppression du magasin actuel
         final Button deleteShop= (Button)v.findViewById(R.id.DeleteShop);
         deleteShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 GoShoppingDBHelper db=new GoShoppingDBHelper(getContext());
+                //mise a jour de la base de données
                 db.deleteShop(shopName);
+                //on retourne a la liste des magasins avec le magasin actuel supprime
+                //transition d'ecran
                 getActivity().getFragmentManager().beginTransaction()
                         .replace(R.id.content_main, new ShopFragment())
                         .addToBackStack("ShopFrag")

@@ -100,6 +100,7 @@ public class NewShopFragment extends Fragment {
         saveButton = (Button) v.findViewById(R.id.manage_shop_search);
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.GONE);
+        //enregistrement du magasin cree
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -110,41 +111,43 @@ public class NewShopFragment extends Fragment {
                     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 }
                 try {
+                    //recuperation de l'adresse
                     addresses = (ArrayList<Address>) geocoder.getFromLocationName(name.getText() + " " + address.getText() + " " + postCode.getText() + " " + city.getText(), 10);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 if (!name.getText().toString().equals("") || addresses.size() != 0 || !((Integer) addresses.size()).equals(null)) {
+                    //si le magasin trouve est unique
                     if (addresses.size() == 1) {
                         Address found_address = addresses.get(0);
+                        //creation du magasin
                         Shop shop = new Shop(null, found_address.getFeatureName(), found_address.getAddressLine(1),
                                 found_address.getLocality(), found_address.getPostalCode(), found_address.getLatitude(), found_address.getLongitude());
+                        //mise a jour de la base de donnée
                         double lastInserted = new GoShoppingDBHelper(getActivity()).addShop(shop);
+                        //on retourne a la liste des magasins ou le magasin a ete cree
+                        //transition d'ecran
                         FragmentManager fragmentManager = getActivity().getFragmentManager();
                         fragmentManager.beginTransaction()
                                 .replace(R.id.content_main, new ShopFragment())
                                 .commit();
+                        //notification en sortie
                         Toast.makeText(getContext(), "Magasin enregistré", Toast.LENGTH_SHORT).show();
                         ((MainActivity) getActivity()).createGeofenceAlert(""+lastInserted, shop.getLatitude(),shop.getLongitude());
                     } else {
+                        //si il y a plusieurs magasin trouves ont consititue une liste a afficher a l'utilisateur
                         ChooseShopDialogFragment chooseShopDialogFragment = ChooseShopDialogFragment.newInstance(addresses);
                         chooseShopDialogFragment.show(getFragmentManager().beginTransaction(), "choose_shop");
                     }
 
                     fab.setVisibility(View.VISIBLE);
                 } else {
+                    //si le magasin est introuvable, notification en sortie pour informer l'utilisateur
                     Snackbar.make(view, "Nom de magasin incorrect ou introuvable", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 }
             }
         });
-        /*fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });*/
         return v;
     }
 

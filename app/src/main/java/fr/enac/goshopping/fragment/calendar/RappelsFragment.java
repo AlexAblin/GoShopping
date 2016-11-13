@@ -120,6 +120,7 @@ public class RappelsFragment extends Fragment {
                 selectedListId = position;
             }
         });
+        //creation de l'alarme au jour sélectionné
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -186,6 +187,7 @@ public class RappelsFragment extends Fragment {
                 new GoShoppingDBHelper(getContext()).addReminder(r,Integer.parseInt(r.getList_id()));
                 Toast.makeText(getContext(), "Rappel enregistré.", Toast.LENGTH_SHORT).show();
                 ((MainActivity) getActivity()).setState(R.id.nav_calendar);
+                //on redirige l'utilisateur sur le calendrier par enchainement d'ecran
                 getFragmentManager().beginTransaction()
                         .replace(R.id.content_main, new CalendarFragment())
                         .commit();
@@ -194,6 +196,10 @@ public class RappelsFragment extends Fragment {
         return v;
     }
 
+    /**
+     * creation d'une alarme
+     * @param targetCal
+     */
     private void setAlarm(Calendar targetCal)
     {   Intent alarmIntent = new Intent(getActivity(), MyAlarmIntentService.class);
         PendingIntent sender = PendingIntent.getService(getActivity(), 0, alarmIntent, 0);
