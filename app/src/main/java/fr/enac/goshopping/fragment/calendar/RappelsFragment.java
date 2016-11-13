@@ -18,13 +18,18 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.StringTokenizer;
 
+import fr.enac.goshopping.MainActivity;
 import fr.enac.goshopping.R;
 import fr.enac.goshopping.database.GoShoppingDBHelper;
 import fr.enac.goshopping.notification.MyAlarmIntentService;
+import fr.enac.goshopping.objects.Reminder;
 import fr.enac.goshopping.objects.ShoppingListObject;
 
 import static android.content.Context.ALARM_SERVICE;
@@ -46,8 +51,8 @@ public class RappelsFragment extends Fragment {
 
     // TODO: Rename and change types of parameters
     private String daySelected;
-    private AlarmManager alarmMgr;
-    private PendingIntent alarmIntent;
+    private StringTokenizer daySelectedTokens;
+    private int selectedListId;
 
     private OnFragmentInteractionListener mListener;
     private FloatingActionButton fab;
@@ -89,11 +94,18 @@ public class RappelsFragment extends Fragment {
         fab.setVisibility(View.GONE);
         final TimePicker t = (TimePicker) v.findViewById(R.id.timePicker);
         final TextView tjour=(TextView) v.findViewById(R.id.Jour);
-        tjour.setText(daySelected);
+        final String dayToDisplay;
+        final String monthToDisplay;
+        final String yearToDisplay;
+        daySelectedTokens = new StringTokenizer(daySelected,"/");
+        dayToDisplay = daySelectedTokens.nextToken();
+        monthToDisplay = daySelectedTokens.nextToken();
+        yearToDisplay = daySelectedTokens.nextToken();
+        tjour.setText(dayToDisplay + " " + monthToDisplay + " " + yearToDisplay);
         t.setVisibility(View.GONE);
         t.setIs24HourView(true);
         ListView calendar_list = (ListView) v.findViewById(R.id.manage_rappel_list);
-        ArrayList<ShoppingListObject> list = new GoShoppingDBHelper(getContext()).getShoppingLists();
+        final ArrayList<ShoppingListObject> list = new GoShoppingDBHelper(getContext()).getShoppingLists();
         ArrayList<String> listName = new ArrayList<>();
         for (ShoppingListObject s : list) {
             listName.add(s.getList_name());
@@ -105,20 +117,78 @@ public class RappelsFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 t.setVisibility(View.VISIBLE);
                 fab.setVisibility(View.VISIBLE);
+                selectedListId = position;
             }
         });
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Calendar cal = Calendar.getInstance();
+                int monthValue = cal.get(Calendar.MONTH);
+                switch (monthToDisplay){
+                    case "janvier":
+                        monthValue = Calendar.JANUARY;
+                        break;
+                    case "février":
+                        monthValue = Calendar.FEBRUARY;
+                        break;
+                    case "mars":
+                        monthValue = Calendar.MARCH;
+                        break;
+                    case "avril":
+                        monthValue = Calendar.APRIL;
+                        break;
+                    case "mai":
+                        monthValue = Calendar.MAY;
+                        break;
+                    case "juin":
+                        monthValue = Calendar.JUNE;
+                        break;
+                    case "juillet":
+                        monthValue = Calendar.JULY;
+                        break;
+                    case "août":
+                        monthValue = Calendar.AUGUST;
+                        break;
+                    case "septembre":
+                        monthValue = Calendar.SEPTEMBER;
+                        break;
+                    case "octobre":
+                        monthValue = Calendar.OCTOBER;
+                        break;
+                    case "novembre":
+                        monthValue = Calendar.NOVEMBER;
+                        break;
+                    case "décembre":
+                        monthValue = Calendar.DECEMBER;
+                        break;
+                }
 
-                //cal.set(t.getHour(),t.getMinute(),00);
+                cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(dayToDisplay));
+                cal.set(Calendar.MONTH,monthValue);
+                cal.set(Calendar.YEAR, Integer.parseInt(yearToDisplay));
                 cal.set(Calendar.HOUR_OF_DAY, t.getHour());
                 cal.set(Calendar.MINUTE, t.getMinute());
+                cal.set(Calendar.SECOND, 0);
 
                 setAlarm(cal);
 
-
+                Reminder r = new Reminder(
+                        list.get(selectedListId).get_ID(),
+                        new Date(
+                                cal.get(Calendar.YEAR),
+                                cal.get(Calendar.MONTH),
+                                cal.get(Calendar.DAY_OF_MONTH),
+                                cal.get(Calendar.HOUR),
+                                cal.get(Calendar.MINUTE),
+                                cal.get(Calendar.SECOND)
+                        ));
+                new GoShoppingDBHelper(getContext()).addReminder(r,Integer.parseInt(r.getList_id()));
+                Toast.makeText(getContext(), "Rappel enregistré.", Toast.LENGTH_SHORT).show();
+                ((MainActivity) getActivity()).setState(R.id.nav_calendar);
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.content_main, new CalendarFragment())
+                        .commit();
             }
         });
         return v;

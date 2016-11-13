@@ -148,6 +148,7 @@ public class ShoppingListContent extends Fragment {
                 return true;
             }
         });
+        fabButton.setVisibility(View.VISIBLE);
 
         return v;
     }

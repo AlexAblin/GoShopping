@@ -13,8 +13,13 @@
 
         <CalendarView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/calendar_calendar" />
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/calendar_day_list" />
 
     </LinearLayout>
 </FrameLayout>

@@ -7,16 +7,16 @@ import java.util.Date;
  */
 
 public class Reminder {
-    private String list_name;
+    private String list_id;
     private Date date;
 
-    public Reminder(String list_name, Date date) {
-        this.list_name = list_name;
+    public Reminder(String list_id, Date date) {
+        this.list_id = list_id;
         this.date=date;
     }
 
-    public String getList_name() {
-        return list_name;
+    public String getList_id() {
+        return list_id;
     }
 
     public void setDate(Date date) {
@@ -24,12 +24,11 @@ public class Reminder {
     }
 
     public Date getDate() {
-
         return date;
     }
 
-    public void setList_name(String list_name) {
-        this.list_name = list_name;
+    public void setList_id(String list_id) {
+        this.list_id = list_id;
     }
 
 }

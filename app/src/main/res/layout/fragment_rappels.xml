@@ -17,7 +17,13 @@
             android:layout_height="wrap_content"
             android:id="@+id/Jour"
             android:text="Jour"
-            android:textAppearance="@android:style/TextAppearance.Material.Title" />
+            android:textAppearance="@android:style/TextAppearance.Material.Small" />
+
+        <TextView
+            android:text="Pour quelle liste souhaitez vous un rappel?"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView7" />
 
         <ListView
             android:layout_width="match_parent"
@@ -25,10 +31,16 @@
             android:id="@+id/manage_rappel_list" />
 
         <TimePicker
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:id="@+id/timePicker"
-            android:layout_weight="0.63" />
+            android:layout_centerHorizontal="true" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </RelativeLayout>
     </LinearLayout>
 
 </FrameLayout>

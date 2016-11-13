@@ -7,11 +7,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import java.util.Date;
 import java.util.List;
 
 import fr.enac.goshopping.R;
-import fr.enac.goshopping.objects.Product;
 import fr.enac.goshopping.objects.Reminder;
 
 /**
@@ -44,7 +42,7 @@ public class CalendarListAdapter extends ArrayAdapter<Reminder> {
         TextView time=(TextView) view.findViewById(R.id.item_calendar_time);
 
         Reminder rem = list.get(position);
-        listName.setText(rem.getList_name());
+        listName.setText(rem.getList_id());
         time.setText(rem.getDate().toString());
         return view;
     }

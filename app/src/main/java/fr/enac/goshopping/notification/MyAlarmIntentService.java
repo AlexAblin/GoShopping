@@ -46,11 +46,11 @@ public class MyAlarmIntentService extends IntentService {
                                 .bigText("C'est le moment de faire un peu de Shopping! Ceci est un rappel de liste Go!Shopping."))
                         .setContentText("Rappel de liste.")
                         .setSmallIcon(R.drawable.shop_icon)
-                        .setDefaults(Notification.DEFAULT_ALL)
-                        .addAction (R.drawable.list_icon,
+                        .setDefaults(Notification.DEFAULT_ALL);
+                        /*.addAction (R.drawable.list_icon,
                                 "Voir la liste", null)
                         .addAction (R.drawable.calendar_icon,
-                                "Me rappeler plus tard", null);;
+                                "Me rappeler plus tard", null);*/
         mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(1, mBuilder.build());
 

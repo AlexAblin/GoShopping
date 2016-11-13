@@ -15,6 +15,10 @@ class GoShoppingDBContract {
     private static final String INT_TYPE = " INTEGER ";
     private static final String COMMA_SEP = ",";
 
+    static final String APP_SETTINGS = "CREATE TABLE IF NOT EXISTS " + AppSettings.TABLE_NAME + "(" +
+            AppSettings.COLUMN_NAME_SETTING + TEXT_TYPE + COMMA_SEP + AppSettings.COLUMN_NAME_VALUE +
+            TEXT_TYPE + ")";
+
     static final String TABLE_SHELF = "CREATE TABLE IF NOT EXISTS " + ShelfTable.TABLE_NAME
             + "(" + ShelfTable._ID + INT_TYPE + " PRIMARY KEY" + COMMA_SEP + ShelfTable.COLUMN_NAME_SHELF_NAME + TEXT_TYPE + ")";
 
@@ -34,11 +38,11 @@ class GoShoppingDBContract {
 
     static final String TABLE_SHOPPING_LIST_CONTENT = "CREATE TABLE IF NOT EXISTS " + ShoppingListContent.TABLE_NAME + "(" + ShoppingListContent.COLUMN_NAME_LIST_ID + INT_TYPE + COMMA_SEP +
             ShoppingListContent.COLUMN_NAME_PRODUCT_ID + INT_TYPE + COMMA_SEP + ShoppingListContent.COLUMN_NAME_QUANTITY + " INTEGER NOT NULL DEFAULT 1 " + COMMA_SEP +
-            "CONSTRAINT fk_list FOREIGN KEY (" + ShoppingListContent.COLUMN_NAME_LIST_ID + ") REFERENCES " + ShoppingList.TABLE_NAME + "(" + ShoppingList._ID + ")" + COMMA_SEP +
+            "CONSTRAINT fk_list FOREIGN KEY (" + ShoppingListContent.COLUMN_NAME_LIST_ID + ") REFERENCES " + ShoppingList.TABLE_NAME + "(" + ShoppingList._ID + ") ON DELETE CASCADE" + COMMA_SEP +
             "CONSTRAINT fk_article FOREIGN KEY (" + ShoppingListContent.COLUMN_NAME_PRODUCT_ID + ") REFERENCES " + ArticleTable.TABLE_NAME + "(" + ArticleTable._ID + "))";
 
     static final String TABLE_REMINDER = "CREATE TABLE IF NOT EXISTS " + ReminderTable.TABLE_NAME + "(" + ReminderTable.COLUMN_NAME_REMINDER_LIST + INT_TYPE + COMMA_SEP +
-            ReminderTable.COLUMN_NAME_REMINDER_DATE + " DATETIME" + COMMA_SEP + "CONSTRAINT fk_list_reminder FOREIGN KEY (" + ReminderTable.COLUMN_NAME_REMINDER_LIST + ")" +
+            ReminderTable.COLUMN_NAME_REMINDER_DATE + " DATETIME" + COMMA_SEP + " CONSTRAINT fk_list_reminder FOREIGN KEY (" + ReminderTable.COLUMN_NAME_REMINDER_LIST + ")" +
             " REFERENCES " + ShoppingList.TABLE_NAME + "(" + ShoppingList._ID + ") ON DELETE CASCADE)";
 
     static class AppSettings {

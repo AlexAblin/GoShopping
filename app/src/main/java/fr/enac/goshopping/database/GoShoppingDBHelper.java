@@ -5,13 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.provider.Settings;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Date;
 
-import fr.enac.goshopping.database.GoShoppingDBContract;
 import fr.enac.goshopping.objects.Product;
 import fr.enac.goshopping.objects.Reminder;
 import fr.enac.goshopping.objects.Shop;
@@ -39,52 +36,17 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + GoShoppingDBContract.ShelfTable.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + GoShoppingDBContract.ShoppingList.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + GoShoppingDBContract.ArticleTable.TABLE_NAME);
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + GoShoppingDBContract.ShoppingListContent.TABLE_NAME);*/
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + GoShoppingDBContract.ShoppingListContent.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + GoShoppingDBContract.ReminderTable.TABLE_NAME);*/
 
         //On crée les tables
+        sqLiteDatabase.execSQL(GoShoppingDBContract.APP_SETTINGS);
         sqLiteDatabase.execSQL(GoShoppingDBContract.TABLE_SHOP);
         sqLiteDatabase.execSQL(GoShoppingDBContract.TABLE_SHELF);
         sqLiteDatabase.execSQL(GoShoppingDBContract.TABLE_SHOPPING_LIST);
         sqLiteDatabase.execSQL(GoShoppingDBContract.TABLE_ARTICLE_LIST);
         sqLiteDatabase.execSQL(GoShoppingDBContract.TABLE_SHOPPING_LIST_CONTENT);
         sqLiteDatabase.execSQL(GoShoppingDBContract.TABLE_REMINDER);
-
-        //Conteneur d'un tuple à insérer
-        //ContentValues values = new ContentValues();
-
-        //On crée un magasin
-        /*values.put(GoShoppingDBContract.ShopTable.COLUMN_NAME_SHOP_NAME, "ENAC'Shop");
-        values.put(GoShoppingDBContract.ShopTable.COLUMN_NAME_SHOP_ADRESS, "Avenue Edouard Belin");
-        values.put(GoShoppingDBContract.ShopTable.COLUMN_NAME_SHOP_CITY, "Toulouse");
-        values.put(GoShoppingDBContract.ShopTable.COLUMN_NAME_SHOP_POST_CODE, "31400");*/
-
-        //On insère les données du contneur et on récupére l'identifiant généré, qu'on affiche
-        /*long newRowId = sqLiteDatabase.insert(GoShoppingDBContract.ShopTable.TABLE_NAME,null,values);
-        System.out.println("Ceci est un test : "+newRowId);*/
-
-
-        //On crée un rayon
-        /*values = new ContentValues();
-        values.put(GoShoppingDBContract.ShoppingList.COLUMN_NAME_LIST_NAME,"Vêtement");
-        values.put(GoShoppingDBContract.ShoppingList.COLUMN_NAME_LIST_SHOP,"Leclerc");*/
-        //On insère le rayon
-        /*newRowId = sqLiteDatabase.insert(GoShoppingDBContract.ShoppingList.TABLE_NAME,null,values);
-        System.out.println(newRowId);*/
-
-        //On crée un article
-        /*values = new ContentValues();
-        values.put(GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_NAME, "Sweat ENAC");
-        values.put(GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_SHELF, "" + newRowId);
-        //values.put(GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_QTY, "1");*/
-        /*newRowId = sqLiteDatabase.insert(GoShoppingDBContract.ArticleTable.TABLE_NAME,null,values);
-        System.out.println(newRowId);*/
-
-        /*values = new ContentValues();
-        values.put(GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_NAME, "Casquette IHM");
-        values.put(GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_SHELF, "" + newRowId);*/
-        //values.put(GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_QTY, "1");
-        /*newRowId = sqLiteDatabase.insert(GoShoppingDBContract.ArticleTable.TABLE_NAME,null,values);
-        System.out.println(newRowId);*/
     }
 
     @Override
@@ -267,11 +229,6 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
 
     public ArrayList<Product> getListContent(String listId) {
         ArrayList<Product> toReturn = new ArrayList<>();
-        String[] projection = {
-                GoShoppingDBContract.ArticleTable._ID,
-                GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_NAME,
-                GoShoppingDBContract.ShoppingListContent.COLUMN_NAME_QUANTITY
-        };
         String myQuery = "SELECT " + GoShoppingDBContract.ArticleTable._ID + "," + GoShoppingDBContract.ArticleTable.COLUMN_NAME_ARTICLE_NAME +
                 "," + GoShoppingDBContract.ShoppingListContent.COLUMN_NAME_QUANTITY + " FROM " + GoShoppingDBContract.ShoppingListContent.TABLE_NAME + ", " +
                 GoShoppingDBContract.ArticleTable.TABLE_NAME + " WHERE " + GoShoppingDBContract.ShoppingListContent.COLUMN_NAME_PRODUCT_ID + " = " +
@@ -366,19 +323,79 @@ public class GoShoppingDBHelper extends SQLiteOpenHelper {
 
         //Conteneur d'un tuple à insérer
         ContentValues values = new ContentValues();
+        String year, month, day ="", hour="", minute="", second="";
+        year = ""+r.getDate().getYear();
+        if(r.getDate().getDate() < 10){
+            day = "0"+r.getDate().getDate();
+        }else{
+            day = ""+r.getDate().getDate();
+        }
+        if(r.getDate().getMonth()<9){
+            month = "0"+(r.getDate().getMonth()+1);
+        }else{
+            month = ""+(r.getDate().getMonth()+1);
+        }
+        if(r.getDate().getHours() < 10){
+            hour = "0"+r.getDate().getHours();
+        }else{
+            hour = ""+r.getDate().getHours();
+        }
+        if(r.getDate().getMinutes()<9){
+            minute = "0"+r.getDate().getMinutes();
+        }else{
+            minute = ""+r.getDate().getMinutes();
+        }
+        second = "00";
+        String date = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
 
         //On lie les données du magasin au conteneur
-        values.put(GoShoppingDBContract.ReminderTable.COLUMN_NAME_REMINDER_DATE, r.getDate().toString());
+        values.put(GoShoppingDBContract.ReminderTable.COLUMN_NAME_REMINDER_DATE, date);
         values.put(GoShoppingDBContract.ReminderTable.COLUMN_NAME_REMINDER_LIST, list_id);
-
+        System.out.println("Ajout " + date + " liste " + list_id);
         //On insère le tuple
         return sqLiteDatabase.insert(GoShoppingDBContract.ReminderTable.TABLE_NAME, null, values);
     }
 
     public int deleteReminder(Reminder r) {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
-        return sqLiteDatabase.delete("reminders", "ListReminder=?", new String[]{r.getList_name()});
+        return sqLiteDatabase.delete("reminders", "ListReminder=?", new String[]{r.getList_id()});
     }
 
+    public ArrayList<ShoppingListObject> getShoppingListByDate(Date d){
+        ArrayList<ShoppingListObject> toReturn = new ArrayList<>();
+        String dateString = "'" + d.getYear() + "-";
+
+        if(d.getMonth() < 9){
+            dateString+=("0" + (d.getMonth()+1) + "-");
+            //dateString = "'" + (d.getYear()) + "-" + (d.getMonth()+1) + "-0" + d.getDate();
+        }else{
+            dateString+=(""+(d.getMonth()+1) + "-");
+            //dateString = "'" + (d.getYear()) + "-" + (d.getMonth()+1) + "-" + d.getDate();
+        }
+        if(d.getDate()<10){
+            dateString+=("0"+d.getDate());
+        }else{
+            dateString+=(""+d.getDate());
+        }
+
+        System.out.println("Date recherchée " + dateString);
+        String midNight = " 00:00:00'";
+        String lastSecond = " 23:59:59'";
+        String request = "SELECT " + GoShoppingDBContract.ShoppingList._ID + "," + GoShoppingDBContract.ShoppingList.COLUMN_NAME_LIST_NAME + "," + GoShoppingDBContract.ReminderTable.COLUMN_NAME_REMINDER_DATE +
+                " FROM " + GoShoppingDBContract.ShoppingList.TABLE_NAME + "," + GoShoppingDBContract.ReminderTable.TABLE_NAME +
+                " WHERE " + GoShoppingDBContract.ReminderTable.COLUMN_NAME_REMINDER_LIST + " = " + GoShoppingDBContract.ShoppingList._ID +
+                " AND " + GoShoppingDBContract.ReminderTable.COLUMN_NAME_REMINDER_DATE + " >= " + dateString + midNight +
+                " AND " + GoShoppingDBContract.ReminderTable.COLUMN_NAME_REMINDER_DATE + " <= " + dateString + lastSecond;
+        Cursor c = getReadableDatabase().rawQuery(request, null);
+        ShoppingListObject toAdd;
+        if (c.moveToFirst()) {
+            do {
+                toAdd = new ShoppingListObject(c.getString(0), c.getString(1), "");
+                System.out.println(c.getString(2));
+                toReturn.add(toAdd);
+            } while (c.moveToNext());
+        }
+        return toReturn;
+    }
 
 }

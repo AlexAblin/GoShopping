@@ -48,7 +48,7 @@ import fr.enac.goshopping.fragment.shop.ShopFragment;
 import fr.enac.goshopping.fragment.shoppinglist.ShoppingListContent;
 import fr.enac.goshopping.fragment.shoppinglist.ShoppingListFragment;
 import fr.enac.goshopping.notification.GeofenceTransitionIntentService;
-import fr.enac.goshopping.notification.LocationNotificationActivity;
+//import fr.enac.goshopping.notification.LocationNotificationActivity;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SettingsFragment.OnFragmentInteractionListener,
@@ -79,7 +79,6 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         createLocationRequest();
-        System.out.println("COOOOOOOOOUUUUUUUUCCCCOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOUUUUUUU");
         //Création de l'instance de l'API Google
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -114,6 +113,10 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        this.state = R.id.nav_calendar;
+        getFragmentManager().beginTransaction()
+                .replace(R.id.content_main, new CalendarFragment())
+                .commit();
     }
 
     @Override
@@ -150,29 +153,6 @@ public class MainActivity extends AppCompatActivity
             });
         }
     }
-
-    /*
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }*/
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -268,17 +248,8 @@ public class MainActivity extends AppCompatActivity
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                 MY_PERMISSIONS_REQUEST_FINE_LOCATION);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        /*Location test = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        System.out.println(test.getLatitude() + ","  + test.getLongitude());*/
         LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, mLocationRequest, this);
 
@@ -315,8 +286,6 @@ public class MainActivity extends AppCompatActivity
     public void onLocationChanged(Location location) {
         mCurrentLocation = location;
         mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
-        System.out.println(location.getLatitude() + "," + location.getLongitude());
-        //updateUI();
     }
 
     private Geofence createGeofence(String id,double latitude, double longitude, int radius){
@@ -340,13 +309,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     private PendingIntent getGeofencePendingIntent() {
-        // Reuse the PendingIntent if we already have it.
         if (mGeofencePendingIntent != null) {
             return mGeofencePendingIntent;
         }
         Intent intent = new Intent(this, GeofenceTransitionIntentService.class);
-        // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when
-        // calling addGeofences() and removeGeofences().
         return PendingIntent.getService(this, 0, intent, PendingIntent.
                 FLAG_UPDATE_CURRENT);
     }
@@ -355,13 +321,6 @@ public class MainActivity extends AppCompatActivity
         mGeofenceList.add(createGeofence(id, latitude, longtitude, 750));
         geofencingRequest = getGeofencingRequest();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
         LocationServices.GeofencingApi.addGeofences(
@@ -369,6 +328,10 @@ public class MainActivity extends AppCompatActivity
                 geofencingRequest,
                 getGeofencePendingIntent()
         ).setResultCallback(this);
+    }
+
+    public void setState(int state){
+        this.state = state;
     }
 
 }

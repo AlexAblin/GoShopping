@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
+import android.widget.ListView;
 
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
@@ -18,6 +19,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 import fr.enac.goshopping.R;
+import fr.enac.goshopping.database.GoShoppingDBHelper;
+import fr.enac.goshopping.listadapters.ShoppingListAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -82,18 +85,33 @@ public class CalendarFragment extends Fragment {
         fab.setVisibility(View.VISIBLE);
         View v = inflater.inflate(R.layout.fragment_calendar, container, false);
 
+        final ListView listView = (ListView) v.findViewById(R.id.calendar_day_list);
+
         final CalendarView c= (CalendarView) v.findViewById(R.id.calendar_calendar);
-        Calendar cal = Calendar.getInstance();
+        final Calendar cal = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("dd/MMMM/yyyy");
         curDate = df.format(cal.getTime());
+
+        listView.setAdapter(new ShoppingListAdapter(getContext(),
+                R.layout.element_list_shopping_layout,
+                new GoShoppingDBHelper(getContext()).getShoppingListByDate(new Date(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH)))
+                ));
 
         c.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
 
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month,
                                             int dayOfMonth) {
+                cal.set(Calendar.YEAR,year);
+                cal.set(Calendar.MONTH,month);
+                cal.set(Calendar.DATE,dayOfMonth);
+                System.out.println(cal);
                 String getmonth= new DateFormatSymbols().getMonths()[month];
                 curDate =String.valueOf(dayOfMonth)+"/"+getmonth+"/"+String.valueOf(year);
+                listView.setAdapter(new ShoppingListAdapter(getContext(),
+                        R.layout.element_list_shopping_layout,
+                        new GoShoppingDBHelper(getContext()).getShoppingListByDate(new Date(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DATE)))
+                ));
             }
         });
         fab.setOnClickListener(new View.OnClickListener() {
