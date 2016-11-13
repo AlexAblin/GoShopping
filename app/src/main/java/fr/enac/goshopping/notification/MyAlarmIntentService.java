@@ -1,36 +1,25 @@
 package fr.enac.goshopping.notification;
 
-import android.app.Activity;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
-import android.widget.Toast;
 
 import fr.enac.goshopping.MainActivity;
 import fr.enac.goshopping.R;
-import fr.enac.goshopping.fragment.RappelsFragment;
-
-import static android.support.v4.content.WakefulBroadcastReceiver.startWakefulService;
 
 /**
  * Created by alexandre on 12/11/2016.
  */
 
-public class MyBroacastIntentService extends IntentService {
+public class MyAlarmIntentService extends IntentService {
 
     private NotificationManager mNotificationManager;
 
-    public MyBroacastIntentService(){
+    public MyAlarmIntentService(){
         super("Alarm");
     }
 
@@ -39,27 +28,8 @@ public class MyBroacastIntentService extends IntentService {
      *
      * @param name Used to name the worker thread, important only for debugging.
      */
-    public MyBroacastIntentService(String name) {
+    public MyAlarmIntentService(String name) {
         super(name);
-    }
-
-    //@Override
-    public void onReceive(final Context context, Intent intent) {
-        //this will sound the alarm tone
-        //this will sound the alarm once, if you wish to
-        //raise alarm in loop continuously then use MediaPlayer and setLooping(true)
-        /*Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-        if (alarmUri == null) {
-            alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        }
-        Ringtone ringtone = RingtoneManager.getRingtone(context, alarmUri);
-        ringtone.play();
-
-        //this will send a notification message
-        ComponentName comp = new ComponentName(context.getPackageName(),
-               AlarmService.class.getName());
-        startWakefulService(context, (intent.setComponent(comp)));
-        setResultCode(Activity.RESULT_OK);*/
     }
 
     private void sendNotification() {

@@ -1,4 +1,4 @@
-package fr.enac.goshopping.fragment;
+package fr.enac.goshopping.fragment.shoppinglist;
 
 import android.app.AlertDialog;
 import android.app.FragmentManager;
@@ -30,6 +30,7 @@ import java.util.ArrayList;
 
 import fr.enac.goshopping.R;
 import fr.enac.goshopping.database.GoShoppingDBHelper;
+import fr.enac.goshopping.fragment.product.NewArticleFragment;
 import fr.enac.goshopping.listadapters.ProductListAdapter;
 import fr.enac.goshopping.objects.Product;
 

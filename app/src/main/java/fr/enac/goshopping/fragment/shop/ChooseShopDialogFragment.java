@@ -1,23 +1,17 @@
-package fr.enac.goshopping.fragment;
+package fr.enac.goshopping.fragment.shop;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.location.Address;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.Geofence;
-import com.google.android.gms.location.LocationServices;
-
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import fr.enac.goshopping.MainActivity;
 import fr.enac.goshopping.R;

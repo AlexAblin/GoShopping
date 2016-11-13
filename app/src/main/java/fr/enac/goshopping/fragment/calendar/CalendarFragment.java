@@ -1,4 +1,4 @@
-package fr.enac.goshopping.fragment;
+package fr.enac.goshopping.fragment.calendar;
 
 import android.app.FragmentManager;
 import android.content.Context;
@@ -10,20 +10,14 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
-import android.widget.ListView;
 
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
 import fr.enac.goshopping.R;
-import fr.enac.goshopping.database.GoShoppingDBHelper;
-import fr.enac.goshopping.objects.ShoppingListObject;
 
 /**
  * A simple {@link Fragment} subclass.

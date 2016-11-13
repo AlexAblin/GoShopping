@@ -1,6 +1,5 @@
-package fr.enac.goshopping.fragment;
+package fr.enac.goshopping.fragment.shop;
 
-import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.net.Uri;
@@ -22,7 +21,6 @@ import java.util.ArrayList;
 import fr.enac.goshopping.R;
 import fr.enac.goshopping.database.GoShoppingDBHelper;
 import fr.enac.goshopping.listadapters.LinkedListAdapter;
-import fr.enac.goshopping.objects.Shop;
 import fr.enac.goshopping.objects.ShoppingListObject;
 
 /**

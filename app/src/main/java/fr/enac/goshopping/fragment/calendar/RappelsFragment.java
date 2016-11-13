@@ -1,4 +1,4 @@
-package fr.enac.goshopping.fragment;
+package fr.enac.goshopping.fragment.calendar;
 
 import android.app.AlarmManager;
 import android.app.FragmentManager;
@@ -24,7 +24,7 @@ import java.util.Calendar;
 
 import fr.enac.goshopping.R;
 import fr.enac.goshopping.database.GoShoppingDBHelper;
-import fr.enac.goshopping.notification.MyBroacastIntentService;
+import fr.enac.goshopping.notification.MyAlarmIntentService;
 import fr.enac.goshopping.objects.ShoppingListObject;
 
 import static android.content.Context.ALARM_SERVICE;
@@ -125,7 +125,7 @@ public class RappelsFragment extends Fragment {
     }
 
     private void setAlarm(Calendar targetCal)
-    {   Intent alarmIntent = new Intent(getActivity(), MyBroacastIntentService.class);
+    {   Intent alarmIntent = new Intent(getActivity(), MyAlarmIntentService.class);
         PendingIntent sender = PendingIntent.getService(getActivity(), 0, alarmIntent, 0);
         AlarmManager alarmManager = (AlarmManager)getContext().getSystemService(ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, targetCal.getTimeInMillis(), sender);

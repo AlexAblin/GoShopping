@@ -1,8 +1,9 @@
-package fr.enac.goshopping.fragment;
+package fr.enac.goshopping.fragment.shop;
 
-import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -12,42 +13,50 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 import fr.enac.goshopping.MainActivity;
 import fr.enac.goshopping.R;
 import fr.enac.goshopping.database.GoShoppingDBHelper;
-import fr.enac.goshopping.objects.ShoppingListObject;
+import fr.enac.goshopping.objects.Shop;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link NewListFragment.OnFragmentInteractionListener} interface
+ * {@link NewShopFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link NewListFragment#newInstance} factory method to
+ * Use the {@link NewShopFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NewListFragment extends Fragment {
+public class NewShopFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String listId;
-    private String listName;
+    private String mParam1;
+    private String mParam2;
 
     private OnFragmentInteractionListener mListener;
 
+    private TextView title;
     private EditText name;
+    private EditText address;
+    private EditText postCode;
+    private EditText city;
     private Button saveButton;
     private FloatingActionButton fab;
 
-    public NewListFragment() {
+    public NewShopFragment() {
         // Required empty public constructor
     }
 
@@ -57,11 +66,11 @@ public class NewListFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment NewListFragment.
+     * @return A new instance of fragment NewShopFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static NewListFragment newInstance(String param1, String param2) {
-        NewListFragment fragment = new NewListFragment();
+    public static NewShopFragment newInstance(String param1, String param2) {
+        NewShopFragment fragment = new NewShopFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -73,40 +82,69 @@ public class NewListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            listId = getArguments().getString(ARG_PARAM1);
-            listName = getArguments().getString(ARG_PARAM2);
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_new_list, container, false);
-        name = (EditText) v.findViewById(R.id.manage_list_name);
+        final Geocoder geocoder = new Geocoder(getActivity());
+        final View v = inflater.inflate(R.layout.fragment_new_shop, container, false);
+        title = (TextView) v.findViewById(R.id.manage_shop_title);
+        name = (EditText) v.findViewById(R.id.manage_shop_name);
+        address = (EditText) v.findViewById(R.id.manage_shop_address);
+        city = (EditText) v.findViewById(R.id.manage_shop_city);
+        postCode = (EditText) v.findViewById(R.id.manage_shop_postcode);
+        saveButton = (Button) v.findViewById(R.id.manage_shop_search);
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.GONE);
-        saveButton = (Button) v.findViewById(R.id.buttonNewList);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!name.getText().toString().equals("")) {
-                    ShoppingListObject list = new ShoppingListObject(null, name.getText().toString(), "aucun magasin associe");
-                    long lastInsertedId = new GoShoppingDBHelper(getActivity()).addShoppingList(list);
-                    list.set_ID("" + lastInsertedId);
-                    FragmentManager fragmentManager = getActivity().getFragmentManager();
-                    ((Activity) getContext()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.content_main, new ShoppingListFragment().newInstance(listId, listName))
-                            .commit();
-                    Toast.makeText(getContext(), "Liste crée.", Toast.LENGTH_SHORT).show();
+                ArrayList<Address> addresses = null;
+                View toTest = getActivity().getCurrentFocus();
+                if (toTest != null) {
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+                try {
+                    addresses = (ArrayList<Address>) geocoder.getFromLocationName(name.getText() + " " + address.getText() + " " + postCode.getText() + " " + city.getText(), 10);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if (!name.getText().toString().equals("") || addresses.size() != 0 || !((Integer) addresses.size()).equals(null)) {
+                    if (addresses.size() == 1) {
+                        Address found_address = addresses.get(0);
+                        Shop shop = new Shop(null, found_address.getFeatureName(), found_address.getAddressLine(1),
+                                found_address.getLocality(), found_address.getPostalCode(), found_address.getLatitude(), found_address.getLongitude());
+                        double lastInserted = new GoShoppingDBHelper(getActivity()).addShop(shop);
+                        FragmentManager fragmentManager = getActivity().getFragmentManager();
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.content_main, new ShopFragment())
+                                .commit();
+                        Toast.makeText(getContext(), "Magasin enregistré", Toast.LENGTH_SHORT).show();
+                        ((MainActivity) getActivity()).createGeofenceAlert(""+lastInserted, shop.getLatitude(),shop.getLongitude());
+                    } else {
+                        ChooseShopDialogFragment chooseShopDialogFragment = ChooseShopDialogFragment.newInstance(addresses);
+                        chooseShopDialogFragment.show(getFragmentManager().beginTransaction(), "choose_shop");
+                    }
 
+                    fab.setVisibility(View.VISIBLE);
                 } else {
-                    Snackbar.make(view, "Nom de liste incorrect", Snackbar.LENGTH_LONG)
+                    Snackbar.make(view, "Nom de magasin incorrect ou introuvable", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 }
             }
         });
+        /*fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });*/
         return v;
     }
 
@@ -164,11 +202,13 @@ public class NewListFragment extends Fragment {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK){
                     // handle back button's click listener
-                    getFragmentManager().popBackStack("ListFrag", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    getFragmentManager().popBackStack("ShopFrag", FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     return true;
                 }
                 return false;
             }
         });
     }
+
+
 }

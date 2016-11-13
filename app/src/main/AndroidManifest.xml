@@ -32,8 +32,8 @@
         </activity>
 
         <service android:name=".notification.GeofenceTransitionIntentService"/>
-        <service android:name=".notification.MyBroacastIntentService"/>
-        <!--<receiver android:name=".notification.MyBroacastIntentService"
+        <service android:name=".notification.MyAlarmIntentService"/>
+        <!--<receiver android:name=".notification.MyAlarmIntentService"
             android:enabled="true"
             android:exported="true">
         </receiver>-->
